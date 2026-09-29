@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 84" width="100%" height="100%">
+  <defs>
+    <linearGradient id="logoRed" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E63946" />
+      <stop offset="100%" stop-color="#D62828" />
+    </linearGradient>
+  </defs>
+
+  <!-- Left Icon Mark -->
+  <g transform="translate(6, 6)">
+    <!-- Container Shield -->
+    <rect width="72" height="72" rx="16" fill="#121215" stroke="#27272A" stroke-width="2" />
+    <!-- Chef Hat -->
+    <g transform="translate(11, 8)">
+      <path d="M11 36 C5 26, 6 15, 17 14 C19 5, 31 5, 33 14 C44 15, 45 26, 39 36 Z" fill="url(#logoRed)" />
+      <rect x="9" y="36" width="32" height="9" rx="2" fill="#FFFFFF" />
+      <!-- Stylized Code Bracket inside Hat Base -->
+      <path d="M19 40.5 L15 40.5" stroke="#D62828" stroke-width="2" stroke-linecap="round" />
+      <path d="M31 40.5 L35 40.5" stroke="#D62828" stroke-width="2" stroke-linecap="round" />
+      <circle cx="25" cy="40.5" r="1.5" fill="#0B0B0C" />
+    </g>
+  </g>
+
+  <!-- Typography Lockup -->
+  <g transform="translate(90, 24)">
+    <!-- CodeChef Wordmark -->
+    <text x="0" y="14" font-family="'Inter', sans-serif" font-weight="800" font-size="22" fill="#FFFFFF" letter-spacing="-0.5">
+      CodeChef
+    </text>
+    
+    <!-- <ABESEC> Monospace Chapter Badge -->
+    <text x="110" y="14" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="18" fill="#D62828" letter-spacing="-0.5">
+      &lt;ABESEC&gt;
+    </text>
+
+    <!-- Chapter Label -->
+    <text x="0" y="32" font-family="'Inter', sans-serif" font-weight="600" font-size="11" fill="#A1A1AA" letter-spacing="2" text-transform="uppercase">
+      Chapter
+    </text>
+
+    <!-- Subtitle: ABES Engineering College -->
+    <g transform="translate(74, 23)">
+      <rect x="0" y="0" width="180" height="13" rx="3" fill="#1C1C22" stroke="#27272A" stroke-width="1" />
+      <text x="8" y="9.5" font-family="'Inter', sans-serif" font-weight="600" font-size="8.5" fill="#E4E4E7" letter-spacing="0.5">
+        ABES ENGINEERING COLLEGE
+      </text>
+    </g>
+  </g>
+</svg>
