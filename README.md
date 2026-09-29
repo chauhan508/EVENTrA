@@ -183,3 +183,5 @@ All 20 verification criteria have been rigorously tested:
 ---
 
 © 2026 CodeChef &lt;ABESEC&gt; Chapter, ABES Engineering College.
+#   E V E N T r A  
+ 
