@@ -3,15 +3,10 @@
   "version": "1.0.0",
   "description": "EVENTRA - Discover. Register. Participate. College Event Management Platform",
   "private": true,
-  "workspaces": [
-    "client"
-  ],
   "scripts": {
-    "build": "npm --prefix client run build",
-    "build:client": "npm --prefix client run build",
-    "server": "npm --prefix server run dev",
-    "client": "npm --prefix client run dev",
-    "install:all": "npm install --prefix server && npm install --prefix client"
+    "build": "vite build",
+    "dev": "vite",
+    "server": "node server/src/server.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.1.0",
