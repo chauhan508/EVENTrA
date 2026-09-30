@@ -1,8 +1,8 @@
 import React from 'react';
-import { Calendar, Mail, Phone, School, GraduationCap, Clock } from 'lucide-react';
+import { Calendar, Mail, Phone, School, GraduationCap, Clock, Trash2 } from 'lucide-react';
 import { TableRowSkeleton } from '../common/LoadingSkeleton';
 
-const RegistrationTable = ({ registrations, isLoading }) => {
+const RegistrationTable = ({ registrations, isLoading, onDelete }) => {
   if (isLoading) {
     return (
       <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0B1712]">
@@ -49,6 +49,7 @@ const RegistrationTable = ({ registrations, isLoading }) => {
                 <th className="py-3.5 px-4 font-semibold">Phone</th>
                 <th className="py-3.5 px-4 font-semibold">Event</th>
                 <th className="py-3.5 px-4 font-semibold">Registered At</th>
+                {onDelete && <th className="py-3.5 px-4 font-semibold text-right">Action</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5 font-mono">
@@ -99,6 +100,17 @@ const RegistrationTable = ({ registrations, isLoading }) => {
                       <div className="text-[#F5F7F4]">{dateStr}</div>
                       <div className="text-[10px] text-[#8F9B94]">{timeStr}</div>
                     </td>
+                    {onDelete && (
+                      <td className="py-3.5 px-4 text-right">
+                        <button
+                          onClick={() => onDelete(regId)}
+                          className="p-1.5 rounded-lg bg-red-950/20 hover:bg-red-950/40 border border-red-500/20 text-red-400 hover:text-red-300 transition-colors"
+                          title="Delete Registration"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
@@ -123,9 +135,20 @@ const RegistrationTable = ({ registrations, isLoading }) => {
                   <h4 className="font-bold text-[#F5F7F4] text-sm font-sans">{reg.name}</h4>
                   <p className="text-[#8F9B94] text-[11px]">{reg.email}</p>
                 </div>
-                <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-[#F5F7F4]">
-                  {reg.year}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-[#F5F7F4]">
+                    {reg.year}
+                  </span>
+                  {onDelete && (
+                    <button
+                      onClick={() => onDelete(regId)}
+                      className="p-1 rounded bg-red-950/20 hover:bg-red-950/40 border border-red-500/20 text-red-400 hover:text-red-300 transition-colors"
+                      title="Delete Registration"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
               </div>
 
               <div className="space-y-1 text-[#8F9B94] pt-2 border-t border-white/5 text-[11px]">

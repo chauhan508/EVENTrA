@@ -11,17 +11,14 @@ import {
   MapPin,
   ExternalLink
 } from 'lucide-react';
-import { fetchDashboardStats, createAdminEvent } from '../api/admin';
+import { fetchDashboardStats } from '../api/admin';
 import StatsCard from '../components/admin/StatsCard';
-import EventFormModal from '../components/admin/EventFormModal';
 import { useToast } from '../context/ToastContext';
 
 const AdminDashboardPage = () => {
   const [stats, setStats] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const { success, error } = useToast();
+  const { info } = useToast();
 
   const loadStats = async () => {
     try {
@@ -39,22 +36,6 @@ const AdminDashboardPage = () => {
   useEffect(() => {
     loadStats();
   }, []);
-
-  const handleCreateEvent = async (eventData) => {
-    setIsSubmitting(true);
-    try {
-      const response = await createAdminEvent(eventData);
-      if (response.success) {
-        success('Event created successfully');
-        setIsAddModalOpen(false);
-        loadStats();
-      }
-    } catch (err) {
-      error(err.message || 'Failed to create event');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <div className="space-y-8 text-left">
@@ -75,7 +56,7 @@ const AdminDashboardPage = () => {
         {/* Quick Actions */}
         <div className="flex items-center gap-3">
           <button
-            onClick={() => setIsAddModalOpen(true)}
+            onClick={() => info('Demo Mode: Campus events are fixed for this college demo submission.')}
             className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-lg bg-[#C8FF00] hover:bg-[#B5E600] text-[#06110D] text-xs font-bold transition-colors shadow-sm"
           >
             <Plus className="w-4 h-4" />
@@ -249,14 +230,6 @@ const AdminDashboardPage = () => {
           </div>
         </div>
       </div>
-
-      {/* Create Event Modal */}
-      <EventFormModal
-        isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
-        onSubmit={handleCreateEvent}
-        isSubmitting={isSubmitting}
-      />
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Filter, Download, ChevronLeft, ChevronRight, RefreshCw, Users } from 'lucide-react';
-import { fetchAdminRegistrations, fetchAdminEvents } from '../api/admin';
+import { fetchAdminRegistrations, fetchAdminEvents, deleteAdminRegistration } from '../api/admin';
 import RegistrationTable from '../components/admin/RegistrationTable';
 import { useToast } from '../context/ToastContext';
 
@@ -16,7 +16,7 @@ const AdminRegistrationsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState({ total: 0, pages: 1, limit: 15 });
 
-  const { info } = useToast();
+  const { info, success, error } = useToast();
 
   const loadData = async (page = currentPage) => {
     setIsLoading(true);
@@ -86,6 +86,16 @@ const AdminRegistrationsPage = () => {
     document.body.removeChild(link);
 
     info('Exported registration records as CSV file');
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      await deleteAdminRegistration(id);
+      success('Registration record deleted');
+      loadData(currentPage);
+    } catch (err) {
+      error(err.message || 'Failed to delete registration');
+    }
   };
 
   return (
@@ -177,7 +187,11 @@ const AdminRegistrationsPage = () => {
       </div>
 
       {/* Table */}
-      <RegistrationTable registrations={registrations} isLoading={isLoading} />
+      <RegistrationTable
+        registrations={registrations}
+        isLoading={isLoading}
+        onDelete={handleDelete}
+      />
 
       {/* Pagination Bar */}
       {pagination.pages > 1 && (

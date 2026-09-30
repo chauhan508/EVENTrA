@@ -1,52 +1,155 @@
-import { apiClient } from './client';
+// ─── EVENTRA Admin Service (Static Demo Data Layer) ──────────────────────────
+// Direct browser verification without external backend or database calls.
 
-export const adminLogin = async (credentials) => {
-  return apiClient('/admin/login', {
-    method: 'POST',
-    body: JSON.stringify(credentials)
-  });
+import {
+  DEMO_ADMIN,
+  verifyAdminLogin,
+  getDashboardStats,
+  getStoredEvents,
+  getStoredRegistrations,
+  deleteRegistration
+} from '../data/mockData';
+
+export const adminLogin = async ({ email, username, password }) => {
+  await new Promise((resolve) => setTimeout(resolve, 80));
+
+  const cred = email || username || '';
+  const result = verifyAdminLogin(cred, password);
+
+  return {
+    success: true,
+    token: result.token,
+    admin: result.admin
+  };
 };
 
 export const fetchAdminProfile = async () => {
-  return apiClient('/admin/me');
+  await new Promise((resolve) => setTimeout(resolve, 40));
+
+  const token = localStorage.getItem('eventra_admin_token');
+  if (!token) {
+    throw new Error('Not authenticated');
+  }
+
+  return {
+    success: true,
+    admin: {
+      id: 'admin_demo_01',
+      username: DEMO_ADMIN.username,
+      email: DEMO_ADMIN.email,
+      name: DEMO_ADMIN.name,
+      role: 'Super Administrator'
+    }
+  };
 };
 
 export const fetchDashboardStats = async () => {
-  return apiClient('/admin/stats');
+  await new Promise((resolve) => setTimeout(resolve, 60));
+
+  const stats = getDashboardStats();
+  return {
+    success: true,
+    data: stats
+  };
 };
 
 export const fetchAdminEvents = async () => {
-  return apiClient('/admin/events');
+  await new Promise((resolve) => setTimeout(resolve, 60));
+
+  const events = getStoredEvents();
+  return {
+    success: true,
+    data: events
+  };
 };
 
-export const createAdminEvent = async (eventData) => {
-  return apiClient('/admin/events', {
-    method: 'POST',
-    body: JSON.stringify(eventData)
-  });
+export const createAdminEvent = async () => {
+  return {
+    success: false,
+    message: 'Event management is in read-only mode. Demo events are fixed for this college submission.'
+  };
 };
 
-export const updateAdminEvent = async (id, eventData) => {
-  return apiClient(`/admin/events/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(eventData)
-  });
+export const updateAdminEvent = async () => {
+  return {
+    success: false,
+    message: 'Event editing is disabled. Demo events are fixed for this college submission.'
+  };
 };
 
-export const deleteAdminEvent = async (id) => {
-  return apiClient(`/admin/events/${id}`, {
-    method: 'DELETE'
-  });
+export const deleteAdminEvent = async () => {
+  return {
+    success: false,
+    message: 'Event deletion is disabled. Demo events are fixed for this college submission.'
+  };
 };
 
 export const fetchAdminRegistrations = async (params = {}) => {
-  const query = new URLSearchParams();
-  if (params.search) query.append('search', params.search);
-  if (params.eventId && params.eventId !== 'All') query.append('eventId', params.eventId);
-  if (params.year && params.year !== 'All') query.append('year', params.year);
-  if (params.page) query.append('page', params.page);
-  if (params.limit) query.append('limit', params.limit);
+  await new Promise((resolve) => setTimeout(resolve, 60));
 
-  const qs = query.toString() ? `?${query.toString()}` : '';
-  return apiClient(`/admin/registrations${qs}`);
+  const events = getStoredEvents();
+  let registrations = getStoredRegistrations();
+
+  // Enrich with event object
+  registrations = registrations.map((r) => {
+    const matchedEvent = events.find((e) => String(e._id) === String(r.eventId));
+    return {
+      ...r,
+      eventId: matchedEvent
+        ? { _id: matchedEvent._id, name: matchedEvent.name, category: matchedEvent.category }
+        : { name: 'Campus Event' }
+    };
+  });
+
+  // Filter by event
+  if (params.eventId && params.eventId !== 'All') {
+    registrations = registrations.filter(
+      (r) => String(r.eventId?._id) === String(params.eventId) || String(r.eventId) === String(params.eventId)
+    );
+  }
+
+  // Filter by year
+  if (params.year && params.year !== 'All') {
+    registrations = registrations.filter((r) => r.year === params.year);
+  }
+
+  // Search by student name, email, college, phone, or event name
+  if (params.search && params.search.trim()) {
+    const q = params.search.trim().toLowerCase();
+    registrations = registrations.filter(
+      (r) =>
+        (r.name && r.name.toLowerCase().includes(q)) ||
+        (r.email && r.email.toLowerCase().includes(q)) ||
+        (r.college && r.college.toLowerCase().includes(q)) ||
+        (r.phone && r.phone.includes(q)) ||
+        (r.eventId?.name && r.eventId.name.toLowerCase().includes(q))
+    );
+  }
+
+  const total = registrations.length;
+  const page = parseInt(params.page, 10) || 1;
+  const limit = parseInt(params.limit, 10) || 15;
+  const start = (page - 1) * limit;
+  const paginated = registrations.slice(start, start + limit);
+  const pages = Math.ceil(total / limit) || 1;
+
+  return {
+    success: true,
+    data: paginated,
+    pagination: {
+      total,
+      page,
+      limit,
+      pages
+    }
+  };
+};
+
+export const deleteAdminRegistration = async (id) => {
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  deleteRegistration(id);
+  return {
+    success: true,
+    message: 'Registration deleted successfully'
+  };
 };

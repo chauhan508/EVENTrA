@@ -83,19 +83,19 @@ const AdminLoginPage = () => {
                 htmlFor="email"
                 className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5"
               >
-                Admin Email
+                Admin Username or Email
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8F9B94]">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
-                  type="email"
+                  type="text"
                   id="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@eventra.dev"
-                  autoComplete="email"
+                  placeholder="admin"
+                  autoComplete="username"
                   disabled={isSubmitting}
                   className="w-full pl-10 pr-3.5 py-2.5 bg-[#06110D] border border-white/10 focus:border-[#C8FF00]/50 rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 focus:ring-[#C8FF00]/30 transition-all font-mono"
                 />
@@ -118,7 +118,7 @@ const AdminLoginPage = () => {
                   id="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder="Eventra@2026"
                   autoComplete="current-password"
                   disabled={isSubmitting}
                   className="w-full pl-10 pr-3.5 py-2.5 bg-[#06110D] border border-white/10 focus:border-[#C8FF00]/50 rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 focus:ring-[#C8FF00]/30 transition-all font-mono"
@@ -144,10 +144,13 @@ const AdminLoginPage = () => {
             </div>
           </form>
 
-          <div className="pt-3 border-t border-white/5 text-center">
-            <span className="text-[11px] font-mono text-[#8F9B94]">
-              Default login: <code className="text-[#F5F7F4]">admin@eventra.dev</code>
-            </span>
+          <div className="p-3 rounded-lg bg-[#101D17]/80 border border-white/10 text-center space-y-1">
+            <p className="text-[11px] font-mono text-[#8F9B94]">
+              Demo Credentials for Submission:
+            </p>
+            <p className="text-xs font-mono text-[#C8FF00]">
+              Username: <strong className="text-[#F5F7F4]">admin</strong> &nbsp;|&nbsp; Password: <strong className="text-[#F5F7F4]">Eventra@2026</strong>
+            </p>
           </div>
         </div>
 

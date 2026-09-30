@@ -6,32 +6,19 @@ import {
   Calendar,
   Clock,
   MapPin,
-  Users,
   Sparkles,
   CheckCircle2,
   XCircle,
   ExternalLink
 } from 'lucide-react';
-import {
-  fetchAdminEvents,
-  createAdminEvent,
-  updateAdminEvent,
-  deleteAdminEvent
-} from '../api/admin';
-import EventFormModal from '../components/admin/EventFormModal';
-import ConfirmDeleteModal from '../components/admin/ConfirmDeleteModal';
+import { fetchAdminEvents } from '../api/admin';
 import { useToast } from '../context/ToastContext';
 
 const AdminEventsPage = () => {
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
-  const [editingEvent, setEditingEvent] = useState(null);
-  const [deletingEvent, setDeletingEvent] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { success, error } = useToast();
+  const { success, error, info } = useToast();
 
   const loadEvents = async () => {
     setIsLoading(true);
@@ -52,48 +39,15 @@ const AdminEventsPage = () => {
   }, []);
 
   const handleOpenCreate = () => {
-    setEditingEvent(null);
-    setIsFormModalOpen(true);
+    info('Demo Mode: The 5 campus events are fixed for this college demo submission.');
   };
 
-  const handleOpenEdit = (event) => {
-    setEditingEvent(event);
-    setIsFormModalOpen(true);
+  const handleOpenEdit = () => {
+    info('Demo Mode: Campus event details are fixed for this college demo submission.');
   };
 
-  const handleFormSubmit = async (formData) => {
-    setIsSubmitting(true);
-    try {
-      if (editingEvent) {
-        await updateAdminEvent(editingEvent._id, formData);
-        success('Event updated successfully');
-      } else {
-        await createAdminEvent(formData);
-        success('Event created successfully');
-      }
-      setIsFormModalOpen(false);
-      setEditingEvent(null);
-      loadEvents();
-    } catch (err) {
-      error(err.message || 'Operation failed');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDeleteConfirm = async () => {
-    if (!deletingEvent) return;
-    setIsDeleting(true);
-    try {
-      await deleteAdminEvent(deletingEvent._id);
-      success('Event deleted successfully');
-      setDeletingEvent(null);
-      loadEvents();
-    } catch (err) {
-      error(err.message || 'Failed to delete event');
-    } finally {
-      setIsDeleting(false);
-    }
+  const handleDeleteClick = () => {
+    info('Demo Mode: Fixed campus events cannot be deleted in demo presentation.');
   };
 
   return (
@@ -213,16 +167,16 @@ const AdminEventsPage = () => {
                         <ExternalLink className="w-4 h-4" />
                       </a>
                       <button
-                        onClick={() => handleOpenEdit(event)}
+                        onClick={handleOpenEdit}
                         className="p-2 rounded-lg bg-[#101D17] hover:bg-white/10 text-[#8F9B94] hover:text-[#F5F7F4] border border-white/10 transition-colors"
-                        title="Edit Event"
+                        title="Fixed in Demo"
                       >
                         <Edit2 className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => setDeletingEvent(event)}
+                        onClick={handleDeleteClick}
                         className="p-2 rounded-lg bg-red-950/20 hover:bg-red-950/40 border border-red-500/20 text-red-400 hover:text-red-300 transition-colors"
-                        title="Delete Event"
+                        title="Fixed in Demo"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -234,31 +188,10 @@ const AdminEventsPage = () => {
           </div>
         ) : (
           <div className="p-12 text-center text-sm text-[#8F9B94] border border-white/10 rounded-xl bg-[#0B1712]">
-            No events registered yet. Click "Create New Event" above to add the first event.
+            No events registered yet.
           </div>
         )}
       </div>
-
-      {/* Event Create / Edit Modal */}
-      <EventFormModal
-        isOpen={isFormModalOpen}
-        onClose={() => {
-          setIsFormModalOpen(false);
-          setEditingEvent(null);
-        }}
-        event={editingEvent}
-        onSubmit={handleFormSubmit}
-        isSubmitting={isSubmitting}
-      />
-
-      {/* Delete Confirmation Modal */}
-      <ConfirmDeleteModal
-        isOpen={!!deletingEvent}
-        onClose={() => setDeletingEvent(null)}
-        onConfirm={handleDeleteConfirm}
-        itemName={deletingEvent?.name}
-        isDeleting={isDeleting}
-      />
     </div>
   );
 };
