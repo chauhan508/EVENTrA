@@ -59,7 +59,7 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
         category: 'Coding Competition',
         date: tomorrow.toISOString().split('T')[0],
         time: '04:00 PM - 07:00 PM IST',
-        venue: 'ABES Engineering College',
+        venue: 'Ramanujan Auditorium',
         shortDescription: '',
         description: '',
         registrationDeadline: deadline.toISOString().split('T')[0],
@@ -163,7 +163,7 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
               name="venue"
               value={formData.venue}
               onChange={handleChange}
-              placeholder="e.g. Bhabha Block Auditorium, ABES Engineering College"
+              placeholder="e.g. Ramanujan Auditorium"
               className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
             />
             {errors.venue && <p className="text-xs text-red-400 mt-1">{errors.venue}</p>}

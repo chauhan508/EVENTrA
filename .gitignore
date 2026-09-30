@@ -3,14 +3,20 @@ node_modules/
 client/node_modules/
 server/node_modules/
 
-# Build output
+# Build outputs
+dist/
 client/dist/
 client/dist-ssr/
+.vercel/
 
-# Environment files (keep examples, ignore actuals)
+# Environment files
 .env
+.env.*
 server/.env
+server/.env.*
 client/.env
+client/.env.*
+!.env.example
 !server/.env.example
 !client/.env.example
 
@@ -30,8 +36,6 @@ Thumbs.db
 *.swp
 *.swo
 
-# Vite
+# Vite cache
 client/.vite/
-
-# MongoDB memory server binary cache
-server/.cache/
+.vite/

@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Calendar,
@@ -265,7 +265,7 @@ const EventDetailsPage = () => {
             </div>
 
             <p className="text-[11px] text-zinc-400 text-center leading-relaxed">
-              Open to students across all branches at ABES Engineering College.
+              Open to students across all branches and academic programs.
             </p>
           </div>
         </div>

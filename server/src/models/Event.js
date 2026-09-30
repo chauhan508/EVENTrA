@@ -1,6 +1,6 @@
 const { query } = require('../config/db');
 
-// Helper: map a DB row to the shape controllers expect (matching old Mongoose output)
+// Helper: map a DB row to the normalized object shape controllers expect
 const toEvent = (row) => {
   if (!row) return null;
   const now = new Date();

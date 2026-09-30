@@ -31,7 +31,7 @@ const adminLogin = async (req, res, next) => {
       });
     }
 
-    const secret = process.env.JWT_SECRET || 'codechef_abesec_production_secret_2026';
+    const secret = process.env.JWT_SECRET || 'eventra_jwt_production_secret_2026';
     const token = jwt.sign(
       { id: admin._id || admin.id, email: admin.email, name: admin.name },
       secret,

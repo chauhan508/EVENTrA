@@ -115,7 +115,7 @@ const HomePage = () => {
               <div className="pt-6 border-t border-zinc-800/80 flex items-center gap-6 text-xs font-mono text-zinc-500">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#FF4D2E]" />
-                  <span>ABES Engineering College</span>
+                  <span>College Campus Hub</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-zinc-600" />

@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Loader2, AlertCircle, Send, Check } from 'lucide-react';
 import { registerForEvent } from '../../api/events';
 
@@ -6,7 +6,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    college: 'ABES Engineering College',
+    college: 'Institute of Technology',
     year: '2nd Year',
     phone: ''
   });
@@ -124,7 +124,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="e.g. rahul.sharma@abes.ac.in"
+          placeholder="e.g. rahul.sharma@student.edu"
           disabled={isSubmitting}
           className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
             errors.email
@@ -146,7 +146,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
           name="college"
           value={formData.college}
           onChange={handleChange}
-          placeholder="ABES Engineering College"
+          placeholder="e.g. Institute of Technology"
           disabled={isSubmitting}
           className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
             errors.college

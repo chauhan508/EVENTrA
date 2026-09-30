@@ -12,7 +12,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-    const secret = process.env.JWT_SECRET || 'codechef_abesec_production_secret_2026';
+    const secret = process.env.JWT_SECRET || 'eventra_jwt_production_secret_2026';
     const decoded = jwt.verify(token, secret);
 
     const admin = await Admin.findById(decoded.id);

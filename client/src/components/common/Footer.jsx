@@ -18,7 +18,7 @@ const Footer = () => {
             </p>
             <div className="flex items-center gap-2 text-xs text-zinc-400 pt-1">
               <MapPin className="w-4 h-4 text-[#FF4D2E] shrink-0" />
-              <span>ABES Engineering College, NH-24, Ghaziabad, UP, India</span>
+              <span>Ramanujan Auditorium, Campus Central</span>
             </div>
           </div>
 
@@ -96,7 +96,7 @@ const Footer = () => {
           <p>© {new Date().getFullYear()} Eventra. All rights reserved.</p>
           <div className="flex items-center gap-1 font-mono text-[11px] text-zinc-500">
             <Terminal className="w-3.5 h-3.5 text-[#FF4D2E]" />
-            <span>Built for ABES Engineering College</span>
+            <span>Discover. Register. Participate.</span>
           </div>
         </div>
       </div>

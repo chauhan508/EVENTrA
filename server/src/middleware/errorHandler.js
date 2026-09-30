@@ -1,8 +1,8 @@
 const errorHandler = (err, req, res, next) => {
   console.error('Server Error:', err);
 
-  // PostgreSQL unique violation error (code 23505) or legacy Mongoose 11000
-  if (err.code === '23505' || err.code === 11000) {
+  // PostgreSQL unique violation error (code 23505)
+  if (err.code === '23505') {
     return res.status(409).json({
       success: false,
       message: 'A duplicate record already exists with these details.'
@@ -17,7 +17,7 @@ const errorHandler = (err, req, res, next) => {
     });
   }
 
-  // Mongoose validation error fallback
+  // Input validation error fallback
   if (err.name === 'ValidationError') {
     const messages = Object.values(err.errors || {}).map((e) => e.message);
     return res.status(400).json({

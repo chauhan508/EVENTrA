@@ -1,12 +1,13 @@
 {
-  "name": "codechef-abesec-chapter",
+  "name": "eventra-platform",
   "version": "1.0.0",
-  "description": "Official Web Platform for CodeChef <ABESEC> Chapter at ABES Engineering College",
+  "description": "EVENTRA - Discover. Register. Participate. College Event Management Platform",
   "private": true,
   "scripts": {
+    "build": "npm --prefix client run build",
+    "build:client": "npm --prefix client run build",
     "server": "npm --prefix server run dev",
     "client": "npm --prefix client run dev",
-    "build:client": "npm --prefix client run build",
     "install:all": "npm install --prefix server && npm install --prefix client"
   },
   "dependencies": {
@@ -20,14 +21,16 @@
     "pg": "^8.23.0"
   },
   "keywords": [
-    "codechef",
-    "abesec",
+    "eventra",
+    "events",
+    "college",
+    "management",
     "react",
     "express",
     "postgresql",
     "neon",
     "tailwind"
   ],
-  "author": "CodeChef <ABESEC> Chapter",
+  "author": "EVENTRA Team",
   "license": "MIT"
 }
