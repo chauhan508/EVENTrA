@@ -1,29 +1,28 @@
 const errorHandler = (err, req, res, next) => {
   console.error('Server Error:', err);
 
-  // Mongoose duplicate key error
-  if (err.code === 11000) {
-    const field = Object.keys(err.keyValue || {})[0] || 'field';
+  // PostgreSQL unique violation error (code 23505) or legacy Mongoose 11000
+  if (err.code === '23505' || err.code === 11000) {
     return res.status(409).json({
       success: false,
-      message: `A record with this ${field} already exists for this event.`
+      message: 'A duplicate record already exists with these details.'
     });
   }
 
-  // Mongoose validation error
+  // PostgreSQL invalid text representation / syntax
+  if (err.code === '22P02') {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid resource identifier format.'
+    });
+  }
+
+  // Mongoose validation error fallback
   if (err.name === 'ValidationError') {
-    const messages = Object.values(err.errors).map((e) => e.message);
+    const messages = Object.values(err.errors || {}).map((e) => e.message);
     return res.status(400).json({
       success: false,
       message: messages.join('. ')
-    });
-  }
-
-  // CastError (invalid ObjectId)
-  if (err.name === 'CastError') {
-    return res.status(400).json({
-      success: false,
-      message: 'Invalid resource identifier format'
     });
   }
 

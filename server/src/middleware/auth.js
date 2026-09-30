@@ -15,13 +15,17 @@ const authMiddleware = async (req, res, next) => {
     const secret = process.env.JWT_SECRET || 'codechef_abesec_production_secret_2026';
     const decoded = jwt.verify(token, secret);
 
-    const admin = await Admin.findById(decoded.id).select('-passwordHash');
+    const admin = await Admin.findById(decoded.id);
     if (!admin) {
       return res.status(401).json({
         success: false,
         message: 'Invalid session. Admin account not found.'
       });
     }
+
+    // Do not leak password hash
+    delete admin.password_hash;
+    delete admin.passwordHash;
 
     req.admin = admin;
     next();

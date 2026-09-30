@@ -1,11 +1,61 @@
 const bcrypt = require('bcryptjs');
+const { query } = require('../config/db');
 const Event = require('../models/Event');
 const Registration = require('../models/Registration');
 const Admin = require('../models/Admin');
 
+const initSchema = async () => {
+  // Create tables if they do not exist
+  await query(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL DEFAULT 'Club Lead',
+      email TEXT NOT NULL UNIQUE,
+      password_hash TEXT NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS events (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      category TEXT NOT NULL,
+      date TIMESTAMPTZ NOT NULL,
+      time TEXT NOT NULL,
+      venue TEXT NOT NULL,
+      short_description TEXT NOT NULL,
+      description TEXT NOT NULL,
+      registration_deadline TIMESTAMPTZ NOT NULL,
+      is_featured BOOLEAN DEFAULT FALSE,
+      registration_open BOOLEAN DEFAULT TRUE,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS registrations (
+      id SERIAL PRIMARY KEY,
+      event_id INTEGER NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+      name TEXT NOT NULL,
+      email TEXT NOT NULL,
+      college TEXT NOT NULL,
+      year TEXT NOT NULL,
+      phone TEXT NOT NULL,
+      registered_at TIMESTAMPTZ DEFAULT NOW(),
+      UNIQUE(event_id, email)
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_events_date ON events(date);
+    CREATE INDEX IF NOT EXISTS idx_events_category ON events(category);
+    CREATE INDEX IF NOT EXISTS idx_registrations_event_id ON registrations(event_id);
+    CREATE INDEX IF NOT EXISTS idx_registrations_email ON registrations(email);
+  `);
+};
+
 const seedData = async () => {
   try {
-    const adminCount = await Admin.countDocuments();
+    await initSchema();
+
+    const adminCount = await Admin.count();
     if (adminCount === 0) {
       console.log('Seeding default admin user...');
       const salt = await bcrypt.genSalt(10);
@@ -22,11 +72,10 @@ const seedData = async () => {
       console.log('Default admin created: admin@eventra.dev / Admin@Eventra2026!');
     }
 
-    const eventCount = await Event.countDocuments();
+    const eventCount = await Event.count();
     if (eventCount === 0) {
       console.log('Seeding demo events...');
 
-      // Dates relative to current date for realistic upcoming schedule
       const now = new Date();
       const inDays = (d) => new Date(now.getTime() + d * 24 * 60 * 60 * 1000);
 
@@ -146,10 +195,9 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
       const createdEvents = await Event.insertMany(eventsData);
       console.log(`Inserted ${createdEvents.length} demo events.`);
 
-      // Seed sample registrations for demo purposes
       const sampleRegistrations = [
         {
-          eventId: createdEvents[0]._id, // BuildVerse
+          eventId: createdEvents[0].id || createdEvents[0]._id,
           name: 'Aarav Sharma',
           email: 'aarav.sharma@abes.ac.in',
           college: 'ABES Engineering College',
@@ -157,7 +205,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98765 43210'
         },
         {
-          eventId: createdEvents[0]._id,
+          eventId: createdEvents[0].id || createdEvents[0]._id,
           name: 'Priya Verma',
           email: 'priya.v@abes.ac.in',
           college: 'ABES Engineering College',
@@ -165,7 +213,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98112 34567'
         },
         {
-          eventId: createdEvents[0]._id,
+          eventId: createdEvents[0].id || createdEvents[0]._id,
           name: 'Rohan Gupta',
           email: 'rohan.g@abes.ac.in',
           college: 'ABES Engineering College',
@@ -173,7 +221,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98223 45678'
         },
         {
-          eventId: createdEvents[1]._id, // CodeSprint
+          eventId: createdEvents[1].id || createdEvents[1]._id,
           name: 'Ananya Mishra',
           email: 'ananya.m@abes.ac.in',
           college: 'ABES Engineering College',
@@ -181,7 +229,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98334 56789'
         },
         {
-          eventId: createdEvents[1]._id,
+          eventId: createdEvents[1].id || createdEvents[1]._id,
           name: 'Devansh Pandey',
           email: 'devansh.p@abes.ac.in',
           college: 'ABES Engineering College',
@@ -189,7 +237,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98445 67890'
         },
         {
-          eventId: createdEvents[2]._id, // Algorithm Arena
+          eventId: createdEvents[2].id || createdEvents[2]._id,
           name: 'Sneha Patel',
           email: 'sneha.patel@abes.ac.in',
           college: 'ABES Engineering College',
@@ -197,7 +245,7 @@ Prerequisites: Basic HTML/CSS/JS knowledge. Laptops required.`,
           phone: '+91 98556 78901'
         },
         {
-          eventId: createdEvents[3]._id, // TechTalk
+          eventId: createdEvents[3].id || createdEvents[3]._id,
           name: 'Vikram Rajput',
           email: 'vikram.r@abes.ac.in',
           college: 'ABES Engineering College',

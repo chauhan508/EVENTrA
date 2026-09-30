@@ -1,59 +1,38 @@
-const mongoose = require('mongoose');
+const { Pool } = require('pg');
 
-let memoryServer = null;
+let pool = null;
+
+const getPool = () => {
+  if (!pool) {
+    const connectionString = process.env.DATABASE_URL;
+    if (!connectionString) {
+      throw new Error('DATABASE_URL environment variable is not set.');
+    }
+    pool = new Pool({
+      connectionString,
+      ssl: { rejectUnauthorized: false }, // Required for Neon
+      max: 5,                             // Keep low for serverless
+      idleTimeoutMillis: 10000,
+      connectionTimeoutMillis: 5000
+    });
+  }
+  return pool;
+};
+
+/**
+ * Execute a SQL query.
+ * @param {string} text   - SQL string (use $1, $2, ... for parameters)
+ * @param {Array}  params - Parameter values
+ */
+const query = async (text, params) => {
+  const client = getPool();
+  return client.query(text, params);
+};
 
 const connectDB = async () => {
-  const uri = process.env.MONGODB_URI;
-
-  if (uri && !uri.includes('localhost') && !uri.includes('127.0.0.1')) {
-    try {
-      console.log('Connecting to configured MongoDB...');
-      await mongoose.connect(uri);
-      console.log('MongoDB connected successfully');
-      return;
-    } catch (err) {
-      console.warn('Configured MongoDB connection failed:', err.message);
-    }
-  }
-
-  // Attempt local connection if specified
-  if (uri) {
-    try {
-      await mongoose.connect(uri, { serverSelectionTimeoutMS: 2500 });
-      console.log('Local MongoDB connected successfully at:', uri);
-      return;
-    } catch (err) {
-      console.warn('Local MongoDB connection failed, falling back to embedded MongoDB engine:', err.message);
-    }
-  }
-
-  // Fallback to MongoMemoryServer
-  try {
-    const { MongoMemoryServer } = require('mongodb-memory-server');
-    console.log('Starting Embedded MongoDB Engine for seamless zero-setup execution...');
-    memoryServer = await MongoMemoryServer.create({
-      instance: {
-        dbName: 'eventra'
-      }
-    });
-    const memUri = memoryServer.getUri();
-    await mongoose.connect(memUri);
-    console.log('Embedded MongoDB connected at:', memUri);
-  } catch (err) {
-    console.error('Fatal: Could not initialize database:', err);
-    throw err;
-  }
+  // Verify connectivity and create schema
+  await query('SELECT 1');
+  console.log('PostgreSQL (Neon) connected successfully');
 };
 
-const disconnectDB = async () => {
-  try {
-    await mongoose.disconnect();
-    if (memoryServer) {
-      await memoryServer.stop();
-    }
-  } catch (err) {
-    console.error('Error disconnecting database:', err);
-  }
-};
-
-module.exports = { connectDB, disconnectDB };
+module.exports = { query, connectDB };

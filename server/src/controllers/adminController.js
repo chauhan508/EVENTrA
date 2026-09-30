@@ -15,7 +15,7 @@ const adminLogin = async (req, res, next) => {
       });
     }
 
-    const admin = await Admin.findOne({ email: email.trim().toLowerCase() });
+    const admin = await Admin.findByEmail(email.trim().toLowerCase());
     if (!admin) {
       return res.status(401).json({
         success: false,
@@ -33,7 +33,7 @@ const adminLogin = async (req, res, next) => {
 
     const secret = process.env.JWT_SECRET || 'codechef_abesec_production_secret_2026';
     const token = jwt.sign(
-      { id: admin._id, email: admin.email, name: admin.name },
+      { id: admin._id || admin.id, email: admin.email, name: admin.name },
       secret,
       { expiresIn: '7d' }
     );
@@ -43,7 +43,7 @@ const adminLogin = async (req, res, next) => {
       message: 'Login successful',
       token,
       admin: {
-        id: admin._id,
+        id: admin._id || admin.id,
         name: admin.name,
         email: admin.email
       }
@@ -72,40 +72,27 @@ const getDashboardStats = async (req, res, next) => {
     const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
 
     const [totalEvents, upcomingEventsCount, totalRegistrations, thisMonthCount] = await Promise.all([
-      Event.countDocuments(),
-      Event.countDocuments({ date: { $gte: now } }),
-      Registration.countDocuments(),
-      Registration.countDocuments({ registeredAt: { $gte: startOfMonth } })
+      Event.count(),
+      Event.countUpcoming(),
+      Registration.count(),
+      Registration.countSince(startOfMonth)
     ]);
 
-    // Latest 5 registrations
-    const recentRegistrations = await Registration.find()
-      .populate('eventId', 'name category date venue')
-      .sort({ registeredAt: -1 })
-      .limit(6)
-      .lean();
+    // Latest registrations
+    const recentRegistrations = await Registration.findRecent(6);
 
     // Upcoming 5 events with counts
-    const upcomingEvents = await Event.find({ date: { $gte: now } })
-      .sort({ date: 1 })
-      .limit(5)
-      .lean();
+    const upcomingEvents = await Event.findUpcoming(5);
+    const upcomingIds = upcomingEvents.map((e) => e.id || e._id);
+    const countMap = await Registration.countByEventIds(upcomingIds);
 
-    const upcomingIds = upcomingEvents.map((e) => e._id);
-    const regCounts = await Registration.aggregate([
-      { $match: { eventId: { $in: upcomingIds } } },
-      { $group: { _id: '$eventId', count: { $sum: 1 } } }
-    ]);
-
-    const countMap = regCounts.reduce((acc, curr) => {
-      acc[curr._id.toString()] = curr.count;
-      return acc;
-    }, {});
-
-    const enrichedUpcoming = upcomingEvents.map((e) => ({
-      ...e,
-      registrationCount: countMap[e._id.toString()] || 0
-    }));
+    const enrichedUpcoming = upcomingEvents.map((e) => {
+      const eid = e.id || e._id;
+      return {
+        ...e,
+        registrationCount: countMap[eid] || 0
+      };
+    });
 
     return res.json({
       success: true,
@@ -128,31 +115,9 @@ const getAdminRegistrations = async (req, res, next) => {
   try {
     const { search, eventId, year, page = 1, limit = 20 } = req.query;
 
-    const query = {};
-
-    if (eventId && eventId !== 'All') {
-      query.eventId = eventId;
-    }
-
-    if (year && year !== 'All') {
-      query.year = year;
-    }
-
-    let searchConditions = [];
+    let eventIds = null;
     if (search && search.trim()) {
-      const term = search.trim();
-      searchConditions.push(
-        { name: { $regex: term, $options: 'i' } },
-        { email: { $regex: term, $options: 'i' } }
-      );
-
-      // Also allow searching event name
-      const matchingEvents = await Event.find({ name: { $regex: term, $options: 'i' } }).select('_id');
-      if (matchingEvents.length > 0) {
-        searchConditions.push({ eventId: { $in: matchingEvents.map((e) => e._id) } });
-      }
-
-      query.$or = searchConditions;
+      eventIds = await Event.findByNameSearch(search.trim());
     }
 
     const pageNum = Math.max(1, parseInt(page, 10) || 1);
@@ -160,13 +125,8 @@ const getAdminRegistrations = async (req, res, next) => {
     const skip = (pageNum - 1) * limitNum;
 
     const [total, registrations] = await Promise.all([
-      Registration.countDocuments(query),
-      Registration.find(query)
-        .populate('eventId', 'name category date venue')
-        .sort({ registeredAt: -1 })
-        .skip(skip)
-        .limit(limitNum)
-        .lean()
+      Registration.count({ eventId, year, search, eventIds }),
+      Registration.find({ eventId, year, search, eventIds, skip, limit: limitNum })
     ]);
 
     return res.json({

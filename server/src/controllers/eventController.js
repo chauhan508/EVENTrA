@@ -6,49 +6,16 @@ const getPublicEvents = async (req, res, next) => {
   try {
     const { category, search, sort, featured } = req.query;
 
-    const query = {};
+    const events = await Event.find({ category, search, sort, featured });
 
-    if (category && category !== 'All') {
-      query.category = category;
-    }
-
-    if (search && search.trim()) {
-      query.name = { $regex: search.trim(), $options: 'i' };
-    }
-
-    if (featured === 'true') {
-      query.isFeatured = true;
-    }
-
-    let sortOption = { date: 1 }; // Default: Upcoming first
-    if (sort === 'newest') {
-      sortOption = { createdAt: -1 };
-    } else if (sort === 'date_desc') {
-      sortOption = { date: -1 };
-    }
-
-    const events = await Event.find(query).sort(sortOption).lean();
-
-    // Attach registration count to each event
-    const eventIds = events.map((e) => e._id);
-    const counts = await Registration.aggregate([
-      { $match: { eventId: { $in: eventIds } } },
-      { $group: { _id: '$eventId', count: { $sum: 1 } } }
-    ]);
-
-    const countMap = counts.reduce((acc, curr) => {
-      acc[curr._id.toString()] = curr.count;
-      return acc;
-    }, {});
+    const eventIds = events.map((e) => e.id || e._id);
+    const countMap = await Registration.countByEventIds(eventIds);
 
     const eventsWithCounts = events.map((e) => {
-      const now = new Date();
-      const isPastDeadline = now > new Date(e.registrationDeadline);
+      const eid = e.id || e._id;
       return {
         ...e,
-        registrationCount: countMap[e._id.toString()] || 0,
-        isPastDeadline,
-        isRegistrationAvailable: e.registrationOpen && !isPastDeadline
+        registrationCount: countMap[eid] || 0
       };
     });
 
@@ -65,7 +32,7 @@ const getPublicEvents = async (req, res, next) => {
 // GET /api/events/:id (Public)
 const getPublicEventById = async (req, res, next) => {
   try {
-    const event = await Event.findById(req.params.id).lean();
+    const event = await Event.findById(req.params.id);
     if (!event) {
       return res.status(404).json({
         success: false,
@@ -73,17 +40,15 @@ const getPublicEventById = async (req, res, next) => {
       });
     }
 
-    const registrationCount = await Registration.countDocuments({ eventId: event._id });
-    const now = new Date();
-    const isPastDeadline = now > new Date(event.registrationDeadline);
+    const eid = event.id || event._id;
+    const countMap = await Registration.countByEventIds([eid]);
+    const registrationCount = countMap[eid] || 0;
 
     return res.json({
       success: true,
       data: {
         ...event,
-        registrationCount,
-        isPastDeadline,
-        isRegistrationAvailable: event.registrationOpen && !isPastDeadline
+        registrationCount
       }
     });
   } catch (err) {
@@ -139,7 +104,7 @@ const registerForEvent = async (req, res, next) => {
     // Check for duplicate registration
     const normalizedEmail = email.trim().toLowerCase();
     const existing = await Registration.findOne({
-      eventId: event._id,
+      eventId: event.id || event._id,
       email: normalizedEmail
     });
 
@@ -152,13 +117,12 @@ const registerForEvent = async (req, res, next) => {
 
     // Save registration
     const registration = await Registration.create({
-      eventId: event._id,
+      eventId: event.id || event._id,
       name: name.trim(),
       email: normalizedEmail,
       college: college.trim(),
       year,
-      phone: phone.trim(),
-      registeredAt: new Date()
+      phone: phone.trim()
     });
 
     return res.status(201).json({
@@ -166,7 +130,7 @@ const registerForEvent = async (req, res, next) => {
       message: 'Registration successful! See you at the event.',
       data: {
         registration: {
-          id: registration._id,
+          id: registration.id || registration._id,
           name: registration.name,
           email: registration.email,
           college: registration.college,
@@ -174,7 +138,7 @@ const registerForEvent = async (req, res, next) => {
           registeredAt: registration.registeredAt
         },
         event: {
-          id: event._id,
+          id: event.id || event._id,
           name: event.name,
           category: event.category,
           date: event.date,
@@ -191,25 +155,16 @@ const registerForEvent = async (req, res, next) => {
 // GET /api/admin/events (Admin)
 const getAdminEvents = async (req, res, next) => {
   try {
-    const events = await Event.find().sort({ createdAt: -1 }).lean();
+    const events = await Event.findAll();
 
-    const eventIds = events.map((e) => e._id);
-    const counts = await Registration.aggregate([
-      { $match: { eventId: { $in: eventIds } } },
-      { $group: { _id: '$eventId', count: { $sum: 1 } } }
-    ]);
-
-    const countMap = counts.reduce((acc, curr) => {
-      acc[curr._id.toString()] = curr.count;
-      return acc;
-    }, {});
+    const eventIds = events.map((e) => e.id || e._id);
+    const countMap = await Registration.countByEventIds(eventIds);
 
     const enriched = events.map((e) => {
-      const now = new Date();
+      const eid = e.id || e._id;
       return {
         ...e,
-        registrationCount: countMap[e._id.toString()] || 0,
-        isPastDeadline: now > new Date(e.registrationDeadline)
+        registrationCount: countMap[eid] || 0
       };
     });
 
@@ -245,16 +200,15 @@ const createEvent = async (req, res, next) => {
       });
     }
 
-    // If isFeatured is true, optionally unfeature other events if single featured is desired or keep multiple
     const event = await Event.create({
       name: name.trim(),
       category,
-      date: new Date(date),
+      date,
       time: time.trim(),
       venue: venue.trim(),
       shortDescription: shortDescription.trim(),
       description: description.trim(),
-      registrationDeadline: new Date(registrationDeadline),
+      registrationDeadline,
       isFeatured: Boolean(isFeatured),
       registrationOpen: registrationOpen !== undefined ? Boolean(registrationOpen) : true
     });
@@ -273,41 +227,17 @@ const createEvent = async (req, res, next) => {
 const updateEvent = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const {
-      name,
-      category,
-      date,
-      time,
-      venue,
-      shortDescription,
-      description,
-      registrationDeadline,
-      isFeatured,
-      registrationOpen
-    } = req.body;
-
-    const event = await Event.findById(id);
-    if (!event) {
+    const existing = await Event.findById(id);
+    if (!existing) {
       return res.status(404).json({ success: false, message: 'Event not found' });
     }
 
-    if (name !== undefined) event.name = name.trim();
-    if (category !== undefined) event.category = category;
-    if (date !== undefined) event.date = new Date(date);
-    if (time !== undefined) event.time = time.trim();
-    if (venue !== undefined) event.venue = venue.trim();
-    if (shortDescription !== undefined) event.shortDescription = shortDescription.trim();
-    if (description !== undefined) event.description = description.trim();
-    if (registrationDeadline !== undefined) event.registrationDeadline = new Date(registrationDeadline);
-    if (isFeatured !== undefined) event.isFeatured = Boolean(isFeatured);
-    if (registrationOpen !== undefined) event.registrationOpen = Boolean(registrationOpen);
-
-    await event.save();
+    const updated = await Event.update(id, req.body);
 
     return res.json({
       success: true,
       message: 'Event updated successfully',
-      data: event
+      data: updated
     });
   } catch (err) {
     next(err);
@@ -323,9 +253,8 @@ const deleteEvent = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Event not found' });
     }
 
-    await Event.findByIdAndDelete(id);
-    // Delete registrations associated with this event
-    await Registration.deleteMany({ eventId: id });
+    await Registration.deleteByEventId(id);
+    await Event.deleteById(id);
 
     return res.json({
       success: true,
