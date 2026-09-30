@@ -17,7 +17,7 @@ import { ToastProvider } from './context/ToastContext';
 // Public Layout Wrapper
 const PublicLayout = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-[#0B0B0C] text-[#F4F4F5]">
+    <div className="min-h-screen flex flex-col bg-[#06110D] text-[#F5F7F4]">
       <Navbar />
       <main className="flex-1">
         <Outlet />

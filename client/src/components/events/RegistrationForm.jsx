@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Loader2, AlertCircle, Send, Check } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowRight } from 'lucide-react';
 import { registerForEvent } from '../../api/events';
 
 const RegistrationForm = ({ event, onSuccess }) => {
+  const eventId = event._id || event.id;
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -69,7 +71,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
 
     setIsSubmitting(true);
     try {
-      const response = await registerForEvent(event._id, formData);
+      const response = await registerForEvent(eventId, formData);
       if (response.success) {
         onSuccess(response.data);
       } else {
@@ -83,18 +85,18 @@ const RegistrationForm = ({ event, onSuccess }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+    <form onSubmit={handleSubmit} className="space-y-4" noValidate>
       {serverError && (
-        <div className="flex items-start gap-3 p-3.5 rounded-lg bg-red-950/40 border border-[#FF4D2E]/50 text-red-200 text-sm">
-          <AlertCircle className="w-5 h-5 text-[#FF4D2E] shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2.5 p-3 rounded-lg bg-red-950/30 border border-red-500/40 text-red-200 text-xs font-mono">
+          <AlertCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
           <p>{serverError}</p>
         </div>
       )}
 
       {/* Full Name */}
       <div>
-        <label htmlFor="name" className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-          Full Name <span className="text-[#FF4D2E]">*</span>
+        <label htmlFor="name" className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5">
+          Full Name <span className="text-[#C8FF00]">*</span>
         </label>
         <input
           type="text"
@@ -104,19 +106,19 @@ const RegistrationForm = ({ event, onSuccess }) => {
           onChange={handleChange}
           placeholder="e.g. Rahul Sharma"
           disabled={isSubmitting}
-          className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
+          className={`w-full px-3.5 py-2.5 bg-[#06110D] border rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 transition-colors ${
             errors.name
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-zinc-800 focus:border-[#FF4D2E] focus:ring-[#FF4D2E]'
+              ? 'border-red-500/80 focus:ring-red-500'
+              : 'border-white/10 focus:border-[#C8FF00]/50 focus:ring-[#C8FF00]/30'
           }`}
         />
-        {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
+        {errors.name && <p className="text-xs text-red-400 mt-1 font-mono">{errors.name}</p>}
       </div>
 
-      {/* Email */}
+      {/* Email Address */}
       <div>
-        <label htmlFor="email" className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-          Email Address <span className="text-[#FF4D2E]">*</span>
+        <label htmlFor="email" className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5">
+          Email Address <span className="text-[#C8FF00]">*</span>
         </label>
         <input
           type="email"
@@ -126,19 +128,19 @@ const RegistrationForm = ({ event, onSuccess }) => {
           onChange={handleChange}
           placeholder="e.g. rahul.sharma@student.edu"
           disabled={isSubmitting}
-          className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
+          className={`w-full px-3.5 py-2.5 bg-[#06110D] border rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 transition-colors ${
             errors.email
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-zinc-800 focus:border-[#FF4D2E] focus:ring-[#FF4D2E]'
+              ? 'border-red-500/80 focus:ring-red-500'
+              : 'border-white/10 focus:border-[#C8FF00]/50 focus:ring-[#C8FF00]/30'
           }`}
         />
-        {errors.email && <p className="text-xs text-red-400 mt-1">{errors.email}</p>}
+        {errors.email && <p className="text-xs text-red-400 mt-1 font-mono">{errors.email}</p>}
       </div>
 
       {/* College / University */}
       <div>
-        <label htmlFor="college" className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-          College / University <span className="text-[#FF4D2E]">*</span>
+        <label htmlFor="college" className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5">
+          College / University <span className="text-[#C8FF00]">*</span>
         </label>
         <input
           type="text"
@@ -148,21 +150,21 @@ const RegistrationForm = ({ event, onSuccess }) => {
           onChange={handleChange}
           placeholder="e.g. Institute of Technology"
           disabled={isSubmitting}
-          className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
+          className={`w-full px-3.5 py-2.5 bg-[#06110D] border rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 transition-colors ${
             errors.college
-              ? 'border-red-500 focus:ring-red-500'
-              : 'border-zinc-800 focus:border-[#FF4D2E] focus:ring-[#FF4D2E]'
+              ? 'border-red-500/80 focus:ring-red-500'
+              : 'border-white/10 focus:border-[#C8FF00]/50 focus:ring-[#C8FF00]/30'
           }`}
         />
-        {errors.college && <p className="text-xs text-red-400 mt-1">{errors.college}</p>}
+        {errors.college && <p className="text-xs text-red-400 mt-1 font-mono">{errors.college}</p>}
       </div>
 
-      {/* Grid: Year & Phone */}
+      {/* Year & Phone */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* Year */}
         <div>
-          <label htmlFor="year" className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-            Year of Study <span className="text-[#FF4D2E]">*</span>
+          <label htmlFor="year" className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5">
+            Year of Study <span className="text-[#C8FF00]">*</span>
           </label>
           <select
             id="year"
@@ -170,10 +172,10 @@ const RegistrationForm = ({ event, onSuccess }) => {
             value={formData.year}
             onChange={handleChange}
             disabled={isSubmitting}
-            className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white focus:outline-none focus:ring-1 transition-colors ${
+            className={`w-full px-3.5 py-2.5 bg-[#06110D] border rounded-lg text-sm text-[#F5F7F4] focus:outline-none focus:ring-1 transition-colors font-mono ${
               errors.year
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-zinc-800 focus:border-[#FF4D2E] focus:ring-[#FF4D2E]'
+                ? 'border-red-500/80 focus:ring-red-500'
+                : 'border-white/10 focus:border-[#C8FF00]/50 focus:ring-[#C8FF00]/30'
             }`}
           >
             <option value="1st Year">1st Year</option>
@@ -181,13 +183,13 @@ const RegistrationForm = ({ event, onSuccess }) => {
             <option value="3rd Year">3rd Year</option>
             <option value="4th Year">4th Year</option>
           </select>
-          {errors.year && <p className="text-xs text-red-400 mt-1">{errors.year}</p>}
+          {errors.year && <p className="text-xs text-red-400 mt-1 font-mono">{errors.year}</p>}
         </div>
 
-        {/* Phone Number */}
+        {/* Phone */}
         <div>
-          <label htmlFor="phone" className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-            Phone Number <span className="text-[#FF4D2E]">*</span>
+          <label htmlFor="phone" className="block text-xs font-mono uppercase tracking-wider text-[#8F9B94] mb-1.5">
+            Phone Number <span className="text-[#C8FF00]">*</span>
           </label>
           <input
             type="tel"
@@ -197,13 +199,13 @@ const RegistrationForm = ({ event, onSuccess }) => {
             onChange={handleChange}
             placeholder="e.g. 9876543210"
             disabled={isSubmitting}
-            className={`w-full px-3.5 py-2.5 bg-[#0E0E12] border rounded-lg text-sm text-white placeholder-zinc-400 focus:outline-none focus:ring-1 transition-colors ${
+            className={`w-full px-3.5 py-2.5 bg-[#06110D] border rounded-lg text-sm text-[#F5F7F4] placeholder-[#8F9B94]/60 focus:outline-none focus:ring-1 transition-colors ${
               errors.phone
-                ? 'border-red-500 focus:ring-red-500'
-                : 'border-zinc-800 focus:border-[#FF4D2E] focus:ring-[#FF4D2E]'
+                ? 'border-red-500/80 focus:ring-red-500'
+                : 'border-white/10 focus:border-[#C8FF00]/50 focus:ring-[#C8FF00]/30'
             }`}
           />
-          {errors.phone && <p className="text-xs text-red-400 mt-1">{errors.phone}</p>}
+          {errors.phone && <p className="text-xs text-red-400 mt-1 font-mono">{errors.phone}</p>}
         </div>
       </div>
 
@@ -212,7 +214,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-lg bg-[#FF4D2E] hover:bg-[#E63D1E] text-white text-sm font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md"
+          className="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-lg bg-[#C8FF00] hover:bg-[#B5E600] text-[#06110D] text-xs font-mono font-bold uppercase tracking-wider transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
         >
           {isSubmitting ? (
             <>
@@ -222,7 +224,7 @@ const RegistrationForm = ({ event, onSuccess }) => {
           ) : (
             <>
               <span>Complete Registration</span>
-              <Send className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4" />
             </>
           )}
         </button>

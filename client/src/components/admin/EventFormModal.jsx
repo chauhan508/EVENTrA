@@ -120,8 +120,8 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
       <form onSubmit={handleSubmit} className="space-y-4 text-left">
         {/* Event Name */}
         <div>
-          <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-            Event Name <span className="text-[#FF4D2E]">*</span>
+          <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+            Event Name <span className="text-[#C8FF00]">*</span>
           </label>
           <input
             type="text"
@@ -129,7 +129,7 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
             value={formData.name}
             onChange={handleChange}
             placeholder="e.g. CodeSprint 2026"
-            className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+            className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] placeholder:text-[#8F9B94]/40 focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
           />
           {errors.name && <p className="text-xs text-red-400 mt-1">{errors.name}</p>}
         </div>
@@ -137,17 +137,17 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
         {/* Category & Venue */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-              Category <span className="text-[#FF4D2E]">*</span>
+            <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+              Category <span className="text-[#C8FF00]">*</span>
             </label>
             <select
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+              className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
             >
               {categories.map((c) => (
-                <option key={c} value={c}>
+                <option key={c} value={c} className="bg-[#0B1712] text-[#F5F7F4]">
                   {c}
                 </option>
               ))}
@@ -155,8 +155,8 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-              Venue <span className="text-[#FF4D2E]">*</span>
+            <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+              Venue <span className="text-[#C8FF00]">*</span>
             </label>
             <input
               type="text"
@@ -164,7 +164,7 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
               value={formData.venue}
               onChange={handleChange}
               placeholder="e.g. Ramanujan Auditorium"
-              className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+              className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] placeholder:text-[#8F9B94]/40 focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
             />
             {errors.venue && <p className="text-xs text-red-400 mt-1">{errors.venue}</p>}
           </div>
@@ -173,22 +173,22 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
         {/* Date, Time, Registration Deadline */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-              Event Date <span className="text-[#FF4D2E]">*</span>
+            <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+              Event Date <span className="text-[#C8FF00]">*</span>
             </label>
             <input
               type="date"
               name="date"
               value={formData.date}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+              className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
             />
             {errors.date && <p className="text-xs text-red-400 mt-1">{errors.date}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-              Time Slot <span className="text-[#FF4D2E]">*</span>
+            <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+              Time Slot <span className="text-[#C8FF00]">*</span>
             </label>
             <input
               type="text"
@@ -196,21 +196,21 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
               value={formData.time}
               onChange={handleChange}
               placeholder="04:00 PM - 07:00 PM"
-              className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+              className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] placeholder:text-[#8F9B94]/40 focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
             />
             {errors.time && <p className="text-xs text-red-400 mt-1">{errors.time}</p>}
           </div>
 
           <div>
-            <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-              Reg. Deadline <span className="text-[#FF4D2E]">*</span>
+            <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+              Reg. Deadline <span className="text-[#C8FF00]">*</span>
             </label>
             <input
               type="date"
               name="registrationDeadline"
               value={formData.registrationDeadline}
               onChange={handleChange}
-              className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+              className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] focus:outline-none focus:border-[#C8FF00]/50 transition-colors"
             />
             {errors.registrationDeadline && (
               <p className="text-xs text-red-400 mt-1">{errors.registrationDeadline}</p>
@@ -221,10 +221,10 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
         {/* Short Description */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <label className="text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider">
-              Short Description (Card view) <span className="text-[#FF4D2E]">*</span>
+            <label className="text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider">
+              Short Description (Card view) <span className="text-[#C8FF00]">*</span>
             </label>
-            <span className="text-[11px] font-mono text-zinc-400">
+            <span className="text-[11px] font-mono text-[#8F9B94]">
               {formData.shortDescription.length}/300
             </span>
           </div>
@@ -234,7 +234,7 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
             value={formData.shortDescription}
             onChange={handleChange}
             placeholder="Brief overview shown on cards and previews..."
-            className="w-full px-3.5 py-2 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+            className="w-full px-3.5 py-2 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] placeholder:text-[#8F9B94]/40 focus:outline-none focus:border-[#C8FF00]/50 transition-colors resize-none"
           />
           {errors.shortDescription && (
             <p className="text-xs text-red-400 mt-1">{errors.shortDescription}</p>
@@ -243,16 +243,16 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
 
         {/* Full Description */}
         <div>
-          <label className="block text-xs font-mono font-medium text-zinc-300 uppercase tracking-wider mb-1.5">
-            Full Description & Agenda <span className="text-[#FF4D2E]">*</span>
+          <label className="block text-xs font-mono font-medium text-[#8F9B94] uppercase tracking-wider mb-1.5">
+            Full Description & Agenda <span className="text-[#C8FF00]">*</span>
           </label>
           <textarea
             name="description"
-            rows="5"
+            rows="4"
             value={formData.description}
             onChange={handleChange}
             placeholder="Detailed description, contest rules, prizes, tracks, prerequisites..."
-            className="w-full px-3.5 py-2.5 bg-[#0A0A0D] border border-zinc-800 rounded-lg text-sm text-white focus:outline-none focus:border-[#FF4D2E]"
+            className="w-full px-3.5 py-2.5 bg-[#06110D] border border-white/10 rounded-lg text-sm text-[#F5F7F4] placeholder:text-[#8F9B94]/40 focus:outline-none focus:border-[#C8FF00]/50 transition-colors resize-none"
           />
           {errors.description && (
             <p className="text-xs text-red-400 mt-1">{errors.description}</p>
@@ -260,53 +260,53 @@ const EventFormModal = ({ isOpen, onClose, event, onSubmit, isSubmitting }) => {
         </div>
 
         {/* Toggles: Featured & Registration Open */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-zinc-900/50 border border-zinc-800/80">
-          <label className="flex items-center gap-3 cursor-pointer">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 rounded-xl bg-[#101D17]/60 border border-white/10">
+          <label className="flex items-center gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
               name="isFeatured"
               checked={formData.isFeatured}
               onChange={handleChange}
-              className="w-4 h-4 rounded text-[#FF4D2E] bg-zinc-950 border-zinc-700 focus:ring-0"
+              className="w-4 h-4 rounded text-[#06110D] accent-[#C8FF00] bg-[#06110D] border-white/20 focus:ring-0"
             />
             <div>
-              <p className="text-xs font-semibold text-white">Featured Event</p>
-              <p className="text-[11px] text-zinc-400">Display prominently on the homepage hero section</p>
+              <p className="text-xs font-semibold text-[#F5F7F4]">Featured Event</p>
+              <p className="text-[11px] text-[#8F9B94]">Display in homepage directory spotlight</p>
             </div>
           </label>
 
-          <label className="flex items-center gap-3 cursor-pointer">
+          <label className="flex items-center gap-3 cursor-pointer select-none">
             <input
               type="checkbox"
               name="registrationOpen"
               checked={formData.registrationOpen}
               onChange={handleChange}
-              className="w-4 h-4 rounded text-[#FF4D2E] bg-zinc-950 border-zinc-700 focus:ring-0"
+              className="w-4 h-4 rounded text-[#06110D] accent-[#C8FF00] bg-[#06110D] border-white/20 focus:ring-0"
             />
             <div>
-              <p className="text-xs font-semibold text-white">Registration Open</p>
-              <p className="text-[11px] text-zinc-400">Allow students to submit registrations</p>
+              <p className="text-xs font-semibold text-[#F5F7F4]">Registration Open</p>
+              <p className="text-[11px] text-[#8F9B94]">Accept new student registrations</p>
             </div>
           </label>
         </div>
 
         {/* Form Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-zinc-800/80">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-white/10">
           <button
             type="button"
             onClick={onClose}
             disabled={isSubmitting}
-            className="px-4 py-2 text-xs font-medium text-zinc-300 hover:text-white rounded-lg hover:bg-zinc-800 transition-colors"
+            className="px-4 py-2 text-xs font-medium text-[#8F9B94] hover:text-[#F5F7F4] rounded-lg hover:bg-white/5 transition-colors"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isSubmitting}
-            className="inline-flex items-center justify-center gap-2 px-5 py-2 rounded-lg bg-[#FF4D2E] hover:bg-[#E63D1E] text-white text-xs font-semibold transition-colors disabled:opacity-50"
+            className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-[#C8FF00] hover:bg-[#B5E600] text-[#06110D] text-xs font-bold transition-colors disabled:opacity-50"
           >
             {isSubmitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
-            <span>{event ? 'Update Event' : 'Create Event'}</span>
+            <span>{event ? 'Save Changes' : 'Create Event'}</span>
           </button>
         </div>
       </form>

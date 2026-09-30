@@ -8,19 +8,19 @@ export default {
     extend: {
       colors: {
         brand: {
-          dark: '#08090A',
-          surface: '#0D0E10',
-          card: '#111214',
-          cardHover: '#171819',
-          border: '#27272A',
-          borderLight: '#3F3F46',
-          primary: '#FF4D2E',
-          primaryHover: '#E63D1E',
-          primaryDark: '#CC3010',
-          primarySubtle: 'rgba(255, 77, 46, 0.12)',
-          muted: '#A1A1AA',
-          dim: '#71717A',
-          light: '#F5F5F5'
+          bg: '#06110D',
+          dark: '#020605',
+          surface: '#0B1712',
+          surface2: '#101D17',
+          surfaceHover: '#14251E',
+          border: 'rgba(255, 255, 255, 0.10)',
+          borderStrong: 'rgba(255, 255, 255, 0.18)',
+          accent: '#C8FF00',
+          accentHover: '#B5E600',
+          accentSubtle: 'rgba(200, 255, 0, 0.12)',
+          text: '#F5F7F4',
+          muted: '#8F9B94',
+          dim: '#5A6660'
         }
       },
       fontFamily: {
@@ -28,8 +28,8 @@ export default {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace']
       },
       animation: {
-        'fade-in': 'fadeIn 0.25s ease-out forwards',
-        'slide-up': 'slideUp 0.3s ease-out forwards'
+        'fade-in': 'fadeIn 0.2s ease-out forwards',
+        'slide-up': 'slideUp 0.25s ease-out forwards'
       },
       keyframes: {
         fadeIn: {
@@ -37,7 +37,7 @@ export default {
           '100%': { opacity: '1' }
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(12px)' },
+          '0%': { opacity: '0', transform: 'translateY(8px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' }
         }
       }

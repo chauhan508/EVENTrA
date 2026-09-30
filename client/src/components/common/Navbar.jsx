@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink, Link, useNavigate, useLocation } from 'react-router-dom';
-import { Menu, X, Shield, LogOut, LayoutDashboard, ChevronRight } from 'lucide-react';
+import { Menu, X, Shield, LogOut, LayoutDashboard, Search, PlusCircle, ChevronRight } from 'lucide-react';
 import Logo from './Logo';
 import { useAuth } from '../../context/AuthContext';
 
@@ -10,7 +10,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleNavClick = (sectionId) => {
+  const handleNavScroll = (sectionId) => {
     setMobileMenuOpen(false);
     if (location.pathname !== '/') {
       navigate(`/#${sectionId}`);
@@ -23,51 +23,75 @@ const Navbar = () => {
   };
 
   const navLinkClass = ({ isActive }) =>
-    `text-sm font-medium transition-colors px-3 py-1.5 rounded-md ${
+    `text-xs uppercase tracking-wider font-mono font-medium transition-colors px-3 py-1.5 rounded ${
       isActive
-        ? 'text-white bg-zinc-800/60 font-semibold'
-        : 'text-zinc-300 hover:text-white hover:bg-zinc-800/30'
+        ? 'text-[#C8FF00] bg-white/5 font-semibold'
+        : 'text-[#8F9B94] hover:text-[#F5F7F4] hover:bg-white/5'
     }`;
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-zinc-800/80 bg-[#08090A]/90 backdrop-blur-md transition-all">
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#06110D]/95 backdrop-blur-md transition-all">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex-1 flex items-center">
+        <div className="flex items-center justify-between h-15">
+          {/* Left: Logo */}
+          <div className="flex items-center gap-6">
             <Logo />
+            
+            {/* Center/Left Navigation Links */}
+            <nav className="hidden md:flex items-center gap-1 pl-4 border-l border-white/10">
+              <NavLink to="/events" className={navLinkClass}>
+                Events
+              </NavLink>
+              <button
+                onClick={() => handleNavScroll('categories')}
+                className="text-xs uppercase tracking-wider font-mono font-medium text-[#8F9B94] hover:text-[#F5F7F4] hover:bg-white/5 transition-colors px-3 py-1.5 rounded"
+              >
+                Categories
+              </button>
+              <button
+                onClick={() => handleNavScroll('about')}
+                className="text-xs uppercase tracking-wider font-mono font-medium text-[#8F9B94] hover:text-[#F5F7F4] hover:bg-white/5 transition-colors px-3 py-1.5 rounded"
+              >
+                About
+              </button>
+            </nav>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-1.5">
-            <NavLink to="/" end className={navLinkClass}>
-              Home
-            </NavLink>
-            <NavLink to="/events" className={navLinkClass}>
-              Events
-            </NavLink>
-            <button
-              onClick={() => handleNavClick('about')}
-              className="text-sm font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/30 transition-colors px-3 py-1.5 rounded-md"
+          {/* Right Action Bar */}
+          <div className="hidden md:flex items-center gap-2.5">
+            <Link
+              to="/events"
+              className="inline-flex items-center gap-1.5 text-xs text-[#8F9B94] hover:text-[#F5F7F4] px-2.5 py-1.5 rounded hover:bg-white/5 transition-colors"
+              title="Search Directory"
             >
-              About
-            </button>
+              <Search className="w-3.5 h-3.5" />
+              <span className="font-mono text-[11px] uppercase tracking-wider">Search</span>
+            </Link>
 
-            <div className="w-[1px] h-5 bg-zinc-800 mx-2" />
+            <Link
+              to={isAuthenticated ? "/admin/events" : "/admin/login"}
+              className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#F5F7F4] hover:text-[#C8FF00] bg-[#0B1712] hover:bg-[#101D17] border border-white/10 hover:border-[#C8FF00]/40 px-3 py-1.5 rounded transition-all"
+            >
+              <PlusCircle className="w-3.5 h-3.5 text-[#C8FF00]" />
+              <span>Submit Event</span>
+            </Link>
+
+            <div className="w-[1px] h-4 bg-white/10 mx-1" />
 
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <Link
                   to="/admin"
-                  className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-200 bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded-md border border-zinc-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-[#06110D] bg-[#C8FF00] hover:bg-[#B5E600] px-3 py-1.5 rounded transition-all shadow-sm"
                 >
-                  <LayoutDashboard className="w-3.5 h-3.5 text-[#FF4D2E]" />
-                  Dashboard
+                  <LayoutDashboard className="w-3.5 h-3.5" />
+                  <span>Dashboard</span>
                 </Link>
                 <button
                   onClick={logout}
-                  className="inline-flex items-center gap-1 text-xs font-medium text-zinc-400 hover:text-white px-2 py-1.5 rounded-md transition-colors"
+                  className="inline-flex items-center p-1.5 rounded text-[#8F9B94] hover:text-red-400 hover:bg-white/5 transition-colors"
                   title="Logout Admin"
+                  aria-label="Logout"
                 >
                   <LogOut className="w-3.5 h-3.5" />
                 </button>
@@ -75,88 +99,106 @@ const Navbar = () => {
             ) : (
               <Link
                 to="/admin/login"
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-300 hover:text-white bg-[#111214] hover:bg-[#1A1B1D] border border-zinc-800 hover:border-zinc-700 px-3.5 py-1.5 rounded-md transition-colors shadow-sm"
+                className="inline-flex items-center gap-1.5 text-xs font-mono text-[#8F9B94] hover:text-[#F5F7F4] px-2.5 py-1.5 rounded hover:bg-white/5 transition-colors"
               >
-                <Shield className="w-3.5 h-3.5 text-[#FF4D2E]" />
-                Admin
+                <Shield className="w-3.5 h-3.5" />
+                <span>Admin</span>
               </Link>
             )}
-          </nav>
+          </div>
 
-          {/* Mobile menu trigger */}
+          {/* Mobile menu button */}
           <div className="flex md:hidden items-center gap-2">
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800/60 focus:outline-none focus:ring-2 focus:ring-zinc-700"
+              className="p-2 rounded text-[#8F9B94] hover:text-white hover:bg-white/5 focus:outline-none"
               aria-label="Toggle menu"
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-zinc-800 bg-[#0D0E10] px-4 pt-3 pb-5 space-y-2 animate-fade-in">
+        <div className="md:hidden border-b border-white/10 bg-[#0B1712] px-4 pt-3 pb-5 space-y-2 animate-fade-in">
           <NavLink
             to="/"
             end
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium text-zinc-200 hover:bg-zinc-800/50"
+            className="flex items-center justify-between px-3 py-2.5 rounded text-sm text-[#F5F7F4] hover:bg-white/5 font-mono"
           >
-            <span>Home</span>
-            <ChevronRight className="w-4 h-4 text-zinc-500" />
+            <span>HOME</span>
+            <ChevronRight className="w-4 h-4 text-[#8F9B94]" />
           </NavLink>
           <NavLink
             to="/events"
             onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium text-zinc-200 hover:bg-zinc-800/50"
+            className="flex items-center justify-between px-3 py-2.5 rounded text-sm text-[#F5F7F4] hover:bg-white/5 font-mono"
           >
-            <span>Events</span>
-            <ChevronRight className="w-4 h-4 text-zinc-500" />
+            <span>ALL EVENTS</span>
+            <ChevronRight className="w-4 h-4 text-[#8F9B94]" />
           </NavLink>
           <button
-            onClick={() => handleNavClick('about')}
-            className="w-full flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium text-zinc-200 hover:bg-zinc-800/50 text-left"
+            onClick={() => handleNavScroll('categories')}
+            className="w-full flex items-center justify-between px-3 py-2.5 rounded text-sm text-[#F5F7F4] hover:bg-white/5 font-mono text-left"
           >
-            <span>About</span>
-            <ChevronRight className="w-4 h-4 text-zinc-500" />
+            <span>CATEGORIES</span>
+            <ChevronRight className="w-4 h-4 text-[#8F9B94]" />
+          </button>
+          <button
+            onClick={() => handleNavScroll('about')}
+            className="w-full flex items-center justify-between px-3 py-2.5 rounded text-sm text-[#F5F7F4] hover:bg-white/5 font-mono text-left"
+          >
+            <span>ABOUT</span>
+            <ChevronRight className="w-4 h-4 text-[#8F9B94]" />
           </button>
 
-          <div className="pt-2 border-t border-zinc-800 mt-2">
+          <div className="pt-2 border-t border-white/10 mt-2 space-y-2">
+            <Link
+              to={isAuthenticated ? "/admin/events" : "/admin/login"}
+              onClick={() => setMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2.5 rounded text-sm font-mono text-[#06110D] bg-[#C8FF00]"
+            >
+              <span className="flex items-center gap-2">
+                <PlusCircle className="w-4 h-4" />
+                SUBMIT EVENT
+              </span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
+
             {isAuthenticated ? (
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-1 pt-1">
                 <Link
                   to="/admin"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium text-zinc-200 bg-zinc-800/70"
+                  className="flex items-center justify-between px-3 py-2 rounded text-sm font-mono text-[#F5F7F4] hover:bg-white/5"
                 >
                   <span className="flex items-center gap-2">
-                    <LayoutDashboard className="w-4 h-4 text-[#FF4D2E]" />
-                    Admin Dashboard
+                    <LayoutDashboard className="w-4 h-4 text-[#C8FF00]" />
+                    Dashboard ({admin?.email})
                   </span>
-                  <ChevronRight className="w-4 h-4 text-zinc-500" />
                 </Link>
                 <button
                   onClick={() => {
                     logout();
                     setMobileMenuOpen(false);
                   }}
-                  className="flex items-center gap-2 px-3 py-2 text-sm text-red-400 hover:text-red-300"
+                  className="flex items-center gap-2 px-3 py-2 text-xs font-mono text-red-400 hover:text-red-300"
                 >
                   <LogOut className="w-4 h-4" />
-                  Logout ({admin?.email})
+                  Logout
                 </button>
               </div>
             ) : (
               <Link
                 to="/admin/login"
                 onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full mt-1 px-4 py-2.5 text-sm font-medium rounded-md bg-[#111214] hover:bg-zinc-800 border border-zinc-700 text-zinc-200"
+                className="flex items-center justify-center gap-2 w-full px-3 py-2 rounded text-xs font-mono text-[#8F9B94] hover:text-[#F5F7F4] bg-[#06110D] border border-white/10"
               >
-                <Shield className="w-4 h-4 text-[#FF4D2E]" />
-                Admin Login
+                <Shield className="w-3.5 h-3.5 text-[#C8FF00]" />
+                ADMIN PORTAL
               </Link>
             )}
           </div>

@@ -1,13 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100%" height="100%">
   <!-- Background -->
-  <rect width="100" height="100" rx="20" fill="#08090A" stroke="#27272A" stroke-width="3" />
+  <rect width="100" height="100" rx="20" fill="#06110D" stroke="rgba(255,255,255,0.12)" stroke-width="3" />
   <!-- Abstract "E" mark built from clean geometric bars -->
   <!-- Vertical spine -->
-  <rect x="28" y="22" width="9" height="56" rx="3" fill="#FF4D2E" />
+  <rect x="28" y="22" width="9" height="56" rx="3" fill="#C8FF00" />
   <!-- Top horizontal bar -->
-  <rect x="28" y="22" width="42" height="9" rx="3" fill="#FF4D2E" />
-  <!-- Middle horizontal bar (slightly shorter for visual interest) -->
-  <rect x="28" y="45.5" width="34" height="9" rx="3" fill="#FF4D2E" />
+  <rect x="28" y="22" width="42" height="9" rx="3" fill="#C8FF00" />
+  <!-- Middle horizontal bar -->
+  <rect x="28" y="45.5" width="34" height="9" rx="3" fill="#C8FF00" />
   <!-- Bottom horizontal bar -->
-  <rect x="28" y="69" width="42" height="9" rx="3" fill="#FF4D2E" />
+  <rect x="28" y="69" width="42" height="9" rx="3" fill="#C8FF00" />
 </svg>

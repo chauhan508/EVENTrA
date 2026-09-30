@@ -31,17 +31,17 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
       <div
         role="dialog"
         aria-modal="true"
-        className={`relative z-10 w-full ${maxWidth} bg-[#121216] border border-zinc-800 rounded-2xl shadow-2xl p-6 overflow-hidden max-h-[90vh] flex flex-col`}
+        className={`relative z-10 w-full ${maxWidth} bg-[#0B1712] border border-white/10 rounded-xl shadow-2xl p-6 overflow-hidden max-h-[90vh] flex flex-col`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between pb-4 border-b border-zinc-800/80 mb-4">
-          <h3 className="text-lg font-bold text-white tracking-tight">{title}</h3>
+        <div className="flex items-center justify-between pb-3.5 border-b border-white/10 mb-4">
+          <h3 className="text-base sm:text-lg font-bold text-[#F5F7F4] tracking-tight font-sans">{title}</h3>
           <button
             onClick={onClose}
-            className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="p-1 rounded text-[#8F9B94] hover:text-[#F5F7F4] hover:bg-white/5 transition-colors"
             aria-label="Close dialog"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 

@@ -5,10 +5,10 @@ import { TableRowSkeleton } from '../common/LoadingSkeleton';
 const RegistrationTable = ({ registrations, isLoading }) => {
   if (isLoading) {
     return (
-      <div className="border border-zinc-800 rounded-xl overflow-hidden bg-[#121216]">
+      <div className="border border-white/10 rounded-xl overflow-hidden bg-[#0B1712]">
         <table className="w-full text-left border-collapse hidden md:table">
           <thead>
-            <tr className="border-b border-zinc-800 bg-zinc-900/60 text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+            <tr className="border-b border-white/10 bg-[#06110D] text-[11px] font-mono text-[#8F9B94] uppercase tracking-wider">
               <th className="py-3 px-4">Student</th>
               <th className="py-3 px-4">College</th>
               <th className="py-3 px-4">Year</th>
@@ -29,8 +29,8 @@ const RegistrationTable = ({ registrations, isLoading }) => {
 
   if (!registrations || registrations.length === 0) {
     return (
-      <div className="text-center py-12 px-4 border border-zinc-800 rounded-xl bg-[#121216]">
-        <p className="text-sm text-zinc-400">No registrations found matching the current criteria.</p>
+      <div className="text-center py-12 px-4 border border-white/10 rounded-xl bg-[#0B1712]">
+        <p className="text-sm font-mono text-[#8F9B94]">No registrations found matching the current criteria.</p>
       </div>
     );
   }
@@ -38,11 +38,11 @@ const RegistrationTable = ({ registrations, isLoading }) => {
   return (
     <div>
       {/* Desktop Table View */}
-      <div className="hidden md:block border border-zinc-800 rounded-xl overflow-hidden bg-[#121216] shadow-sm">
+      <div className="hidden md:block border border-white/10 rounded-xl overflow-hidden bg-[#0B1712] shadow-sm">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-zinc-800 bg-zinc-900/80 text-[11px] font-mono text-zinc-400 uppercase tracking-wider">
+              <tr className="border-b border-white/10 bg-[#06110D] text-[11px] font-mono text-[#8F9B94] uppercase tracking-wider">
                 <th className="py-3.5 px-4 font-semibold">Student Name & Email</th>
                 <th className="py-3.5 px-4 font-semibold">College</th>
                 <th className="py-3.5 px-4 font-semibold">Year</th>
@@ -51,8 +51,9 @@ const RegistrationTable = ({ registrations, isLoading }) => {
                 <th className="py-3.5 px-4 font-semibold">Registered At</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-800/60">
+            <tbody className="divide-y divide-white/5 font-mono">
               {registrations.map((reg) => {
+                const regId = reg._id || reg.id;
                 const dateStr = new Date(reg.registeredAt).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
@@ -64,33 +65,39 @@ const RegistrationTable = ({ registrations, isLoading }) => {
                 });
 
                 return (
-                  <tr key={reg._id} className="hover:bg-zinc-800/30 transition-colors">
+                  <tr key={regId} className="hover:bg-[#101D17] transition-colors">
                     <td className="py-3.5 px-4">
-                      <div className="font-semibold text-white text-sm">{reg.name}</div>
-                      <div className="text-zinc-400 font-mono text-[11px] mt-0.5">{reg.email}</div>
+                      <div className="font-semibold text-[#F5F7F4] text-sm font-sans">{reg.name}</div>
+                      <div className="text-[#8F9B94] text-[11px] mt-0.5">{reg.email}</div>
                     </td>
-                    <td className="py-3.5 px-4 text-zinc-300 max-w-[180px] truncate" title={reg.college}>
-                      {reg.college}
+                    <td className="py-3.5 px-4 text-[#8F9B94]">
+                      <span className="truncate max-w-[180px] inline-block">{reg.college}</span>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="inline-block px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 font-mono text-[11px]">
+                      <span className="inline-block px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-[#F5F7F4]">
                         {reg.year}
                       </span>
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-zinc-300">{reg.phone}</td>
+                    <td className="py-3.5 px-4 text-[#8F9B94]">{reg.phone}</td>
                     <td className="py-3.5 px-4">
-                      <span className="font-medium text-white block max-w-[180px] truncate" title={reg.eventId?.name || 'Event'}>
-                        {reg.eventId?.name || 'Deleted Event'}
-                      </span>
-                      {reg.eventId?.category && (
-                        <span className="text-[10px] font-mono text-zinc-400">
-                          {reg.eventId.category}
-                        </span>
+                      {reg.eventId ? (
+                        <div>
+                          <div className="font-medium text-[#F5F7F4] truncate max-w-[200px] font-sans">
+                            {typeof reg.eventId === 'object' ? reg.eventId.name : 'Registered Event'}
+                          </div>
+                          {typeof reg.eventId === 'object' && reg.eventId.category && (
+                            <span className="text-[10px] text-[#C8FF00] font-mono">
+                              {reg.eventId.category}
+                            </span>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-[#8F9B94] italic">—</span>
                       )}
                     </td>
-                    <td className="py-3.5 px-4 text-zinc-400 font-mono text-[11px]">
-                      <div>{dateStr}</div>
-                      <div className="text-zinc-400">{timeStr}</div>
+                    <td className="py-3.5 px-4 text-[#8F9B94]">
+                      <div className="text-[#F5F7F4]">{dateStr}</div>
+                      <div className="text-[10px] text-[#8F9B94]">{timeStr}</div>
                     </td>
                   </tr>
                 );
@@ -100,49 +107,48 @@ const RegistrationTable = ({ registrations, isLoading }) => {
         </div>
       </div>
 
-      {/* Mobile Stacked Card View - Prevents ugly horizontal scrolling on phones */}
+      {/* Mobile Card View */}
       <div className="md:hidden space-y-3">
         {registrations.map((reg) => {
+          const regId = reg._id || reg.id;
           const dateStr = new Date(reg.registeredAt).toLocaleDateString('en-US', {
             month: 'short',
-            day: 'numeric',
-            year: 'numeric'
+            day: 'numeric'
           });
 
           return (
-            <div
-              key={reg._id}
-              className="p-4 rounded-xl bg-[#121216] border border-zinc-800 space-y-3 shadow-sm"
-            >
-              <div className="flex items-start justify-between gap-2 border-b border-zinc-800/80 pb-2.5">
+            <div key={regId} className="p-4 rounded-xl bg-[#0B1712] border border-white/10 space-y-2.5 text-xs font-mono">
+              <div className="flex items-start justify-between">
                 <div>
-                  <h4 className="font-bold text-white text-sm">{reg.name}</h4>
-                  <span className="text-xs font-mono text-zinc-400 flex items-center gap-1.5 mt-0.5">
-                    <Mail className="w-3 h-3 text-zinc-500" />
-                    {reg.email}
-                  </span>
+                  <h4 className="font-bold text-[#F5F7F4] text-sm font-sans">{reg.name}</h4>
+                  <p className="text-[#8F9B94] text-[11px]">{reg.email}</p>
                 </div>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 shrink-0">
+                <span className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[10px] text-[#F5F7F4]">
                   {reg.year}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs text-zinc-300">
-                <div className="flex items-center gap-1.5 truncate">
-                  <School className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+              <div className="space-y-1 text-[#8F9B94] pt-2 border-t border-white/5 text-[11px]">
+                <div className="flex items-center gap-2">
+                  <School className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
                   <span className="truncate">{reg.college}</span>
                 </div>
-                <div className="flex items-center gap-1.5 font-mono">
-                  <Phone className="w-3.5 h-3.5 text-zinc-500 shrink-0" />
+                <div className="flex items-center gap-2">
+                  <Phone className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
                   <span>{reg.phone}</span>
                 </div>
+                {reg.eventId && (
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+                    <span className="text-[#F5F7F4] truncate">
+                      {typeof reg.eventId === 'object' ? reg.eventId.name : 'Event'}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <div className="pt-2 border-t border-zinc-800/80 flex items-center justify-between text-xs">
-                <span className="font-medium text-white truncate max-w-[200px]">
-                  {reg.eventId?.name || 'Deleted Event'}
-                </span>
-                <span className="text-[11px] font-mono text-zinc-400">{dateStr}</span>
+              <div className="pt-2 border-t border-white/5 text-[10px] text-[#8F9B94] text-right">
+                Registered: {dateStr}
               </div>
             </div>
           );

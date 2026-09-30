@@ -4,43 +4,48 @@
 
 @layer base {
   * {
-    border-color: #27272A;
+    border-color: rgba(255, 255, 255, 0.08);
   }
 
   body {
-    background-color: #08090A;
-    color: #F5F5F5;
+    background-color: #06110D;
+    color: #F5F7F4;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
   }
 
-  /* Clean scrollbar for dark premium aesthetic */
+  /* Clean editorial scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
 
   ::-webkit-scrollbar-track {
-    background: #08090A;
+    background: #06110D;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #27272A;
+    background: rgba(255, 255, 255, 0.12);
     border-radius: 3px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3F3F46;
+    background: rgba(200, 255, 0, 0.35);
   }
 }
 
 @layer utilities {
   .border-subtle {
-    border: 1px solid #27272A;
+    border: 1px solid rgba(255, 255, 255, 0.08);
   }
 
-  /* Minimal dot grid for tech sections */
-  .dot-grid {
-    background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-    background-size: 28px 28px;
+  .border-subtle-hover:hover {
+    border-color: rgba(200, 255, 0, 0.3);
+  }
+
+  /* Clean subtle grid for discovery headers */
+  .grid-pattern {
+    background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 32px 32px;
   }
 }

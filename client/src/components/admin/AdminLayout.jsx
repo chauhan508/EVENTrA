@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { Menu, Shield, Loader2 } from 'lucide-react';
 import AdminSidebar from './AdminSidebar';
@@ -10,9 +10,9 @@ const AdminLayout = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0B0B0C] flex flex-col items-center justify-center text-zinc-400">
-        <Loader2 className="w-8 h-8 animate-spin text-[#FF4D2E] mb-3" />
-        <p className="text-sm font-mono">Verifying authorization...</p>
+      <div className="min-h-screen bg-[#06110D] flex flex-col items-center justify-center text-[#8F9B94]">
+        <Loader2 className="w-7 h-7 animate-spin text-[#C8FF00] mb-3" />
+        <p className="text-xs font-mono">Verifying administrative access...</p>
       </div>
     );
   }
@@ -22,19 +22,19 @@ const AdminLayout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#0B0B0C] text-[#F4F4F5] flex flex-col md:flex-row">
+    <div className="min-h-screen bg-[#06110D] text-[#F5F7F4] flex flex-col md:flex-row">
       {/* Mobile Top Bar */}
-      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0D0D11] border-b border-zinc-800 sticky top-0 z-30">
+      <div className="md:hidden flex items-center justify-between px-4 py-3 bg-[#0B1712] border-b border-white/10 sticky top-0 z-30">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-[#FF4D2E]" />
-          <span className="font-bold text-sm text-white">Eventra Admin</span>
+          <Shield className="w-4 h-4 text-[#C8FF00]" />
+          <span className="font-bold text-sm text-[#F5F7F4] font-sans">EVENTrA Admin</span>
         </div>
         <button
           onClick={() => setMobileMenuOpen(true)}
-          className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800"
+          className="p-1.5 rounded text-[#8F9B94] hover:text-white hover:bg-white/5"
           aria-label="Open sidebar"
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         </button>
       </div>
 

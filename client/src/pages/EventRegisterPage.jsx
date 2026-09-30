@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   CheckCircle2,
@@ -7,7 +7,6 @@ import {
   MapPin,
   ArrowLeft,
   AlertCircle,
-  FileCheck2,
   CalendarDays,
   Sparkles
 } from 'lucide-react';
@@ -46,9 +45,9 @@ const EventRegisterPage = () => {
     return (
       <div className="max-w-2xl mx-auto px-4 py-16 text-center">
         <div className="animate-pulse space-y-4">
-          <div className="h-6 w-1/3 bg-zinc-800 rounded mx-auto" />
-          <div className="h-4 w-1/2 bg-zinc-800/60 rounded mx-auto" />
-          <div className="h-64 bg-zinc-800/40 rounded-xl mt-8" />
+          <div className="h-6 w-1/3 bg-[#0B1712] rounded mx-auto" />
+          <div className="h-4 w-1/2 bg-[#0B1712] rounded mx-auto" />
+          <div className="h-64 bg-[#0B1712] rounded-xl mt-8" />
         </div>
       </div>
     );
@@ -57,12 +56,12 @@ const EventRegisterPage = () => {
   if (error || !event) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
-        <AlertCircle className="w-12 h-12 text-[#FF4D2E] mx-auto mb-4" />
-        <h2 className="text-xl font-bold text-white mb-2">Event Not Available</h2>
-        <p className="text-sm text-zinc-400 mb-6">{error || 'This event does not exist.'}</p>
+        <AlertCircle className="w-10 h-10 text-[#C8FF00] mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-[#F5F7F4] mb-2 font-sans">Event Not Available</h2>
+        <p className="text-sm text-[#8F9B94] mb-6">{error || 'This event does not exist.'}</p>
         <Link
           to="/events"
-          className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors"
+          className="inline-flex items-center gap-2 text-xs font-mono px-4 py-2.5 rounded-lg bg-[#0B1712] hover:bg-[#101D17] text-[#F5F7F4] border border-white/10 transition-colors"
         >
           <ArrowLeft className="w-4 h-4" />
           Back to Events
@@ -71,8 +70,9 @@ const EventRegisterPage = () => {
     );
   }
 
+  const eventId = event._id || event.id;
   const now = new Date();
-  const isPastDeadline = now > new Date(event.registrationDeadline);
+  const isPastDeadline = event.registrationDeadline ? now > new Date(event.registrationDeadline) : false;
   const isAvailable = event.registrationOpen && !isPastDeadline;
 
   // SUCCESS SCREEN
@@ -86,51 +86,51 @@ const EventRegisterPage = () => {
     });
 
     return (
-      <div className="max-w-xl mx-auto px-4 py-12 sm:py-16 animate-fade-in text-center">
-        <div className="p-8 sm:p-10 rounded-2xl bg-[#121216] border border-zinc-800 shadow-2xl space-y-6">
-          {/* Animated check icon */}
-          <div className="w-16 h-16 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
-            <CheckCircle2 className="w-8 h-8" />
+      <div className="max-w-xl mx-auto px-4 py-12 sm:py-16 text-center">
+        <div className="p-8 sm:p-10 rounded-xl bg-[#0B1712] border border-white/10 shadow-2xl space-y-6">
+          {/* Confirmed indicator */}
+          <div className="w-14 h-14 rounded-full bg-[#C8FF00]/10 border border-[#C8FF00]/30 flex items-center justify-center mx-auto text-[#C8FF00]">
+            <CheckCircle2 className="w-7 h-7" />
           </div>
 
-          <div className="space-y-2">
-            <span className="text-xs font-mono font-semibold text-emerald-400 uppercase tracking-widest">
+          <div className="space-y-1.5">
+            <span className="text-[11px] font-mono font-bold text-[#C8FF00] uppercase tracking-widest">
               Registration Confirmed
             </span>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F5F7F4] tracking-tight font-sans">
               You're registered.
             </h1>
-            <p className="text-sm text-zinc-400">See you at the event.</p>
+            <p className="text-xs text-[#8F9B94]">Your registration is saved to the production directory.</p>
           </div>
 
-          {/* Event Confirmation Card */}
-          <div className="p-5 rounded-xl bg-[#0B0B0E] border border-zinc-800/80 text-left space-y-3.5">
-            <div className="border-b border-zinc-800/80 pb-3">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">
-                Registered Event
+          {/* Event Confirmation Summary Card */}
+          <div className="p-4 sm:p-5 rounded-lg bg-[#06110D] border border-white/10 text-left space-y-3 font-mono text-xs">
+            <div className="border-b border-white/5 pb-2.5">
+              <span className="text-[10px] uppercase tracking-wider text-[#8F9B94]">
+                Confirmed Event
               </span>
-              <h3 className="text-base font-bold text-white mt-0.5">{registeredEvent.name}</h3>
+              <h3 className="text-sm font-bold text-[#F5F7F4] mt-0.5 font-sans">{registeredEvent.name}</h3>
             </div>
 
-            <div className="space-y-2 text-xs text-zinc-300">
-              <div className="flex items-center gap-2.5">
-                <Calendar className="w-4 h-4 text-[#FF4D2E] shrink-0" />
-                <span>{eventDate}</span>
+            <div className="space-y-2 text-[#8F9B94]">
+              <div className="flex items-center gap-2">
+                <Calendar className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+                <span className="text-[#F5F7F4]">{eventDate}</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <Clock className="w-4 h-4 text-[#FF4D2E] shrink-0" />
+              <div className="flex items-center gap-2">
+                <Clock className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
                 <span>{registeredEvent.time}</span>
               </div>
-              <div className="flex items-center gap-2.5">
-                <MapPin className="w-4 h-4 text-[#FF4D2E] shrink-0" />
-                <span>{registeredEvent.venue}</span>
+              <div className="flex items-center gap-2">
+                <MapPin className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+                <span className="truncate">{registeredEvent.venue}</span>
               </div>
             </div>
 
             {registrationSuccessData.registration && (
-              <div className="pt-3 border-t border-zinc-800/80 text-[11px] font-mono text-zinc-400 flex items-center justify-between">
-                <span>Attendee: {registrationSuccessData.registration.name}</span>
-                <span className="text-emerald-400">Verified</span>
+              <div className="pt-2.5 border-t border-white/5 text-[11px] text-[#8F9B94] flex items-center justify-between">
+                <span>Attendee: <strong className="text-[#F5F7F4]">{registrationSuccessData.registration.name}</strong></span>
+                <span className="text-[#C8FF00]">Verified ✓</span>
               </div>
             )}
           </div>
@@ -139,14 +139,14 @@ const EventRegisterPage = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
             <Link
               to="/events"
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs font-semibold px-5 py-2.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 transition-colors border border-zinc-700"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs font-mono px-4 py-2.5 rounded-lg bg-[#101D17] hover:bg-white/10 text-[#F5F7F4] transition-colors border border-white/10"
             >
-              <CalendarDays className="w-4 h-4" />
+              <CalendarDays className="w-3.5 h-3.5" />
               <span>Explore More Events</span>
             </Link>
             <Link
-              to={`/events/${event._id}`}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 text-xs font-semibold px-5 py-2.5 rounded-lg bg-[#FF4D2E] hover:bg-[#E63D1E] text-white transition-colors"
+              to={`/events/${eventId}`}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 text-xs font-mono font-bold px-4 py-2.5 rounded-lg bg-[#C8FF00] hover:bg-[#B5E600] text-[#06110D] transition-colors shadow-sm"
             >
               <span>View Event Details</span>
             </Link>
@@ -160,18 +160,18 @@ const EventRegisterPage = () => {
   if (!isAvailable) {
     return (
       <div className="max-w-lg mx-auto px-4 py-16 text-center">
-        <div className="p-8 rounded-2xl bg-[#121216] border border-zinc-800 shadow-xl space-y-4">
-          <AlertCircle className="w-12 h-12 text-[#FF4D2E] mx-auto" />
-          <h2 className="text-xl font-bold text-white">Registration Closed</h2>
-          <p className="text-sm text-zinc-400">
+        <div className="p-8 rounded-xl bg-[#0B1712] border border-white/10 space-y-4">
+          <AlertCircle className="w-10 h-10 text-[#C8FF00] mx-auto" />
+          <h2 className="text-xl font-bold text-[#F5F7F4] font-sans">Registration Closed</h2>
+          <p className="text-xs text-[#8F9B94]">
             {isPastDeadline
-              ? 'The deadline for this event has passed. No further entries can be accepted.'
-              : 'Registrations are currently closed by the organizers.'}
+              ? 'The registration deadline for this event has passed.'
+              : 'Registrations are currently closed for this session.'}
           </p>
-          <div className="pt-4">
+          <div className="pt-2">
             <Link
-              to={`/events/${event._id}`}
-              className="inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white transition-colors"
+              to={`/events/${eventId}`}
+              className="inline-flex items-center gap-1.5 text-xs font-mono px-4 py-2 rounded-lg bg-[#101D17] hover:bg-white/10 text-[#F5F7F4] border border-white/10"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Back to Event Overview
@@ -183,11 +183,11 @@ const EventRegisterPage = () => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 text-left">
+    <div className="max-w-2xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-6 text-left">
       <div>
         <Link
-          to={`/events/${event._id}`}
-          className="inline-flex items-center gap-2 text-xs font-mono text-zinc-400 hover:text-white transition-colors"
+          to={`/events/${eventId}`}
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-[#8F9B94] hover:text-[#C8FF00] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to Event Details</span>
@@ -195,20 +195,20 @@ const EventRegisterPage = () => {
       </div>
 
       {/* Header */}
-      <div className="border-b border-zinc-800 pb-6">
-        <span className="text-xs font-mono font-semibold text-[#FF4D2E] uppercase tracking-wider">
+      <div className="border-b border-white/10 pb-5">
+        <span className="text-[11px] font-mono font-semibold text-[#C8FF00] uppercase tracking-wider">
           Student Registration
         </span>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#F5F7F4] tracking-tight mt-1 font-sans">
           {event.name}
         </h1>
-        <p className="text-xs sm:text-sm text-zinc-400 mt-2">
+        <p className="text-xs text-[#8F9B94] mt-1.5 font-mono">
           {event.category} • {event.venue}
         </p>
       </div>
 
-      {/* Registration Card */}
-      <div className="p-6 sm:p-8 rounded-2xl bg-[#121216] border border-zinc-800 shadow-xl">
+      {/* Form Container Card */}
+      <div className="p-6 sm:p-8 rounded-xl bg-[#0B1712] border border-white/10 shadow-xl">
         <RegistrationForm event={event} onSuccess={setRegistrationSuccessData} />
       </div>
     </div>

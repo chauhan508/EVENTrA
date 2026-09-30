@@ -1,128 +1,133 @@
-﻿import React from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, ArrowRight, Sparkles, CheckCircle2, XCircle } from 'lucide-react';
+import { Calendar, Clock, MapPin, ArrowRight, Sparkles } from 'lucide-react';
 
 const FeaturedEvent = ({ event }) => {
   if (!event) return null;
 
+  const eventId = event._id || event.id;
   const eventDate = new Date(event.date);
+  const day = eventDate.getDate();
+  const month = eventDate.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
+  const year = eventDate.getFullYear();
+
   const formattedDate = eventDate.toLocaleDateString('en-US', {
-    month: 'long',
+    month: 'short',
     day: 'numeric',
     year: 'numeric'
   });
 
-  const deadlineDate = new Date(event.registrationDeadline).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  });
-
   const now = new Date();
-  const isPastDeadline = now > new Date(event.registrationDeadline);
+  const isPastDeadline = event.registrationDeadline ? now > new Date(event.registrationDeadline) : false;
   const isAvailable = event.registrationOpen && !isPastDeadline;
 
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#121217] border border-zinc-800 p-6 sm:p-8 lg:p-10 shadow-xl transition-all">
-      {/* Subtle background red accent line */}
-      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#FF4D2E] to-transparent opacity-90" />
-      
-      <div className="max-w-3xl">
-        {/* Badges */}
-        <div className="flex flex-wrap items-center gap-2.5 mb-4">
-          <span className="inline-flex items-center gap-1.5 text-xs font-mono font-bold px-3 py-1 rounded-md bg-[#FF4D2E]/15 border border-[#FF4D2E]/40 text-[#FF4D4D]">
-            <Sparkles className="w-3.5 h-3.5" />
-            FEATURED EVENT
-          </span>
-          <span className="text-xs font-mono px-3 py-1 rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700">
-            {event.category}
-          </span>
-          {isAvailable ? (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-md border border-emerald-500/20">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              Registration Open
+    <section className="relative overflow-hidden rounded-xl bg-[#0B1712] border border-white/10 p-6 sm:p-8 transition-all">
+      {/* Top accent line */}
+      <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#C8FF00] to-transparent opacity-70" />
+
+      <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+        
+        {/* Left Column: Spotlight Info */}
+        <div className="flex-1 max-w-2xl">
+          {/* Badge row */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-mono font-bold tracking-wider uppercase px-2.5 py-0.5 rounded bg-[#C8FF00]/15 text-[#C8FF00] border border-[#C8FF00]/30">
+              <Sparkles className="w-3 h-3" />
+              Spotlight Event
             </span>
-          ) : (
-            <span className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded-md border border-zinc-700">
-              <XCircle className="w-3.5 h-3.5 text-zinc-400" />
-              Registration Closed
+            <span className="text-[11px] font-mono tracking-wider uppercase px-2.5 py-0.5 rounded bg-white/5 text-[#8F9B94] border border-white/10">
+              {event.category}
             </span>
-          )}
-        </div>
+            {isAvailable ? (
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-[#C8FF00]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#C8FF00] animate-pulse" />
+                Registration Open
+              </span>
+            ) : (
+              <span className="text-[11px] font-mono text-[#8F9B94]">
+                Registration Closed
+              </span>
+            )}
+          </div>
 
-        {/* Title */}
-        <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight mb-4">
-          {event.name}
-        </h2>
+          {/* Heading */}
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#F5F7F4] tracking-tight mb-2.5 font-sans">
+            {event.name}
+          </h2>
 
-        {/* Short description */}
-        <p className="text-sm sm:text-base text-zinc-300 leading-relaxed mb-6">
-          {event.shortDescription}
-        </p>
+          {/* Description */}
+          <p className="text-sm text-[#8F9B94] leading-relaxed mb-5">
+            {event.shortDescription || event.description}
+          </p>
 
-        {/* Event Key Highlights Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl bg-[#0B0B0E] border border-zinc-800/80 mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-              <Calendar className="w-4 h-4 text-[#FF4D2E]" />
+          {/* Scannable Metadata Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 p-3 rounded-lg bg-[#06110D] border border-white/5 text-xs font-mono mb-6">
+            <div className="flex items-center gap-2">
+              <Calendar className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+              <div>
+                <span className="text-[#8F9B94] block text-[10px] uppercase">Date</span>
+                <span className="text-[#F5F7F4] font-medium">{formattedDate}</span>
+              </div>
             </div>
-            <div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Date</p>
-              <p className="text-xs sm:text-sm font-semibold text-white">{formattedDate}</p>
+
+            <div className="flex items-center gap-2">
+              <Clock className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+              <div>
+                <span className="text-[#8F9B94] block text-[10px] uppercase">Time</span>
+                <span className="text-[#F5F7F4] font-medium truncate">{event.time}</span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <MapPin className="w-3.5 h-3.5 text-[#C8FF00] shrink-0" />
+              <div>
+                <span className="text-[#8F9B94] block text-[10px] uppercase">Venue</span>
+                <span className="text-[#F5F7F4] font-medium truncate">{event.venue}</span>
+              </div>
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-              <Clock className="w-4 h-4 text-[#FF4D2E]" />
-            </div>
-            <div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Time</p>
-              <p className="text-xs sm:text-sm font-semibold text-white truncate">{event.time}</p>
-            </div>
-          </div>
+          {/* CTAs */}
+          <div className="flex flex-wrap items-center gap-3">
+            {isAvailable ? (
+              <Link
+                to={`/events/${eventId}/register`}
+                className="inline-flex items-center justify-center gap-1.5 text-xs font-mono font-bold px-5 py-2.5 rounded-lg bg-[#C8FF00] hover:bg-[#B5E600] text-[#06110D] transition-all shadow-sm"
+              >
+                <span>Register for Event</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            ) : (
+              <span className="text-xs font-mono px-4 py-2 rounded-lg bg-white/5 text-[#8F9B94] border border-white/10 cursor-not-allowed">
+                Registration Closed
+              </span>
+            )}
 
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center shrink-0">
-              <MapPin className="w-4 h-4 text-[#FF4D2E]" />
-            </div>
-            <div>
-              <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Venue</p>
-              <p className="text-xs sm:text-sm font-semibold text-white truncate">{event.venue}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* CTAs */}
-        <div className="flex flex-wrap items-center gap-3">
-          {isAvailable ? (
             <Link
-              to={`/events/${event._id}/register`}
-              className="inline-flex items-center justify-center gap-2 text-sm font-semibold px-6 py-3 rounded-lg bg-[#FF4D2E] hover:bg-[#E63D1E] text-white transition-colors shadow-md group"
+              to={`/events/${eventId}`}
+              className="inline-flex items-center justify-center text-xs font-mono font-medium px-4 py-2.5 rounded-lg bg-[#101D17] hover:bg-[#14251E] text-[#F5F7F4] hover:text-[#C8FF00] border border-white/10 hover:border-white/20 transition-all"
             >
-              <span>Register Now</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+              Event Details & Agenda →
             </Link>
-          ) : (
-            <span className="text-sm font-medium px-6 py-3 rounded-lg bg-zinc-800 text-zinc-400 border border-zinc-700 cursor-not-allowed">
-              Registration Closed
-            </span>
-          )}
-
-          <Link
-            to={`/events/${event._id}`}
-            className="inline-flex items-center justify-center text-sm font-semibold px-5 py-3 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 transition-colors border border-zinc-700/80"
-          >
-            Full Details & Agenda
-          </Link>
-
-          {isAvailable && (
-            <span className="text-xs font-mono text-zinc-400 ml-1">
-              Deadline: <span className="text-zinc-300 font-semibold">{deadlineDate}</span>
-            </span>
-          )}
+          </div>
         </div>
+
+        {/* Right Column: Prominent Date Stamp */}
+        <div className="hidden lg:flex shrink-0 w-36 h-36 rounded-xl bg-[#06110D] border border-white/10 flex-col items-center justify-center text-center p-4">
+          <span className="text-[11px] font-mono uppercase tracking-widest text-[#8F9B94] mb-1">
+            {month} {year}
+          </span>
+          <span className="text-5xl font-black font-mono text-[#C8FF00] leading-none my-1">
+            {day}
+          </span>
+          <span className="text-[10px] font-mono text-[#8F9B94] mt-1 uppercase tracking-wider">
+            Ramanujan Aud.
+          </span>
+        </div>
+
       </div>
-    </div>
+    </section>
   );
 };
 
